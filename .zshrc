@@ -1,9 +1,6 @@
 # Path to your oh-my-zsh installation.
 export ZSH="/home/ammont/.oh-my-zsh"
 
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="gnzh"
-
 # Case-sensitive completion must be off. _ and - will be interchangeable.
 HYPHEN_INSENSITIVE="true"
 
@@ -11,7 +8,7 @@ HYPHEN_INSENSITIVE="true"
 DISABLE_AUTO_UPDATE="false"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="false"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -26,3 +23,12 @@ source $ZSH/oh-my-zsh.sh
 
 # uses lsd instead of ls
 alias ls="lsd"
+
+# uses open instead of xdg-open
+alias open="xdg-open"
+
+# adds cargo to path
+export PATH="/home/ammont/.cargo/bin:$PATH"
+
+# ~/.zshrc
+eval "$(starship init zsh)"
