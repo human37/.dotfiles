@@ -1,0 +1,5 @@
+[character]
+success_symbol = "[❯](bold fg:202)"
+
+[git_branch]
+style = "fg:171"
