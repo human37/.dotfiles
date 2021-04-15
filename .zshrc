@@ -27,8 +27,17 @@ alias ls="lsd"
 # uses open instead of xdg-open
 alias open="xdg-open"
 
+# shortcut for apt install
+alias install="sudo apt install"
+
 # adds cargo to path
 export PATH="/home/ammont/.cargo/bin:$PATH"
+
+# adds spotifyd to path
+alias spotifyd="/home/ammont/Documents/pers/spotifyd/target/release/spotifyd"
+
+# makes spt launch spotifyd if not running
+alias spt="/home/ammont/.scripts/launchspt"
 
 # ~/.zshrc
 eval "$(starship init zsh)"
