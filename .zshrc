@@ -39,5 +39,14 @@ alias spotifyd="/home/ammont/Documents/pers/spotifyd/target/release/spotifyd"
 # makes spt launch spotifyd if not running
 alias spt="/home/ammont/.scripts/launchspt"
 
+# programatically switch day/night mode
+export day() {
+    gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-light"
+}
+
+export night() {
+    gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
+}
+
 # ~/.zshrc
 eval "$(starship init zsh)"
