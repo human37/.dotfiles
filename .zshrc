@@ -48,5 +48,13 @@ export night() {
     gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
 }
 
+# fast git
+function fgit() {
+    git add -A 
+    git commit -m "$1"
+    git push
+}
+
+
 # ~/.zshrc
 eval "$(starship init zsh)"
