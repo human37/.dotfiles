@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH="/home/ammont/.oh-my-zsh"
+export ZSH="/home/$USER/.oh-my-zsh"
 
 # Case-sensitive completion must be off. _ and - will be interchangeable.
 HYPHEN_INSENSITIVE="true"
@@ -31,21 +31,24 @@ alias open="xdg-open"
 alias install="sudo apt install"
 
 # adds cargo to path
-export PATH="/home/ammont/.cargo/bin:$PATH"
+export PATH="/home/$USER/.cargo/bin:$PATH"
+
+# adds golang to path
+export PATH="$PATH:/usr/local/go/bin"
 
 # adds spotifyd to path
-alias spotifyd="/home/ammont/Documents/pers/spotifyd/target/release/spotifyd"
+alias spotifyd="/home/$USER/Documents/pers/spotifyd/target/release/spotifyd"
 
 # makes spt launch spotifyd if not running
-alias spt="/home/ammont/.scripts/launchspt"
+alias spt="/home/$USER/.scripts/launchspt"
 
 # programatically switch day/night mode
 export day() {
-    gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-light"
+    gsettings set org.gnome.desktop.interface gtk-theme "Yaru-light"
 }
 
 export night() {
-    gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
+    gsettings set org.gnome.desktop.interface gtk-theme "Yaru-dark"
 }
 
 # fast git
