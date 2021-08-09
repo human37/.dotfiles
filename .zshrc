@@ -58,6 +58,10 @@ function fgit() {
     git push
 }
 
-
+# fast update vscode
+function update-code() {
+    wget 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -O /tmp/code_latest_amd64.deb
+    sudo dpkg -i /tmp/code_latest_amd64.deb
+}
 # ~/.zshrc
 eval "$(starship init zsh)"
