@@ -30,6 +30,12 @@ alias open="xdg-open"
 # shortcut for apt install
 alias install="sudo apt install"
 
+# follow logs for admin_api_app
+function radmin() {
+    make up-d
+    docker-compose logs -f admin-api
+}
+
 # adds cargo to path
 export PATH="/home/$USER/.cargo/bin:$PATH"
 
