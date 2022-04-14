@@ -40,7 +40,9 @@ function radmin() {
 export PATH="/home/$USER/.cargo/bin:$PATH"
 
 # adds golang to path
-export PATH="$PATH:/usr/local/go/bin"
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 # adds spotifyd to path
 alias spotifyd="/home/$USER/Documents/pers/spotifyd/target/release/spotifyd"
@@ -71,3 +73,9 @@ function update-code() {
 }
 # ~/.zshrc
 eval "$(starship init zsh)"
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+# add vasion CLI to path
+export PATH="$HOME/.vasion/bin:$PATH"
+
