@@ -1,6 +1,6 @@
 [character]
-success_symbol = "[➜](bold fg:171)"
-error_symbol = "[➜](bold fg:1)"
+success_symbol = "[❯](bold fg:171)"
+error_symbol = "[❯](bold fg:1)"
 
 [git_branch]
-style = "fg:171"
+style = "fg:11"
