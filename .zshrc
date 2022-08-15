@@ -30,10 +30,40 @@ alias open="xdg-open"
 # shortcut for apt install
 alias install="sudo apt install"
 
-# follow logs for admin_api_app
-function radmin() {
-    make up-d
-    docker-compose logs -f admin-api
+# reinit database and make rabbit dir
+function fullclean() {
+    make down
+    sudo rm -rf .docker-storage
+    sudo mkdir -p .docker-storage/rabbitmq/logs/; sudo chmod -R 777 .docker-storage/rabbitmq/logs/
+} 
+
+# starts admin-gw and admin-ui on specific branch, default develop 
+function runadminbranch() {
+    cd ~/vasion/admin-gw
+    make down
+    sudo make up-d
+    cd ~/vasion/admin-ui
+    if [ $# -eq 0 ]
+    then
+        git checkout develop
+    else
+        git checkout $1
+    fi
+    git pull
+    npm run serve
+}
+
+# fast git
+function fgit() {
+    git add -A 
+    git commit -m "$1"
+    git push
+}
+
+# fast update vscode
+function update-code() {
+    wget 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -O /tmp/code_latest_amd64.deb
+    sudo dpkg -i /tmp/code_latest_amd64.deb
 }
 
 # adds cargo to path
@@ -59,18 +89,6 @@ export night() {
     gsettings set org.gnome.desktop.interface gtk-theme "Yaru-dark"
 }
 
-# fast git
-function fgit() {
-    git add -A 
-    git commit -m "$1"
-    git push
-}
-
-# fast update vscode
-function update-code() {
-    wget 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -O /tmp/code_latest_amd64.deb
-    sudo dpkg -i /tmp/code_latest_amd64.deb
-}
 # ~/.zshrc
 eval "$(starship init zsh)"
 
