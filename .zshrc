@@ -38,11 +38,27 @@ function fullclean() {
 } 
 
 # starts admin-gw and admin-ui on specific branch, default develop 
-function runadminbranch() {
+function runadmin() {
     cd ~/vasion/admin-gw
     make down
     sudo make up-d
     cd ~/vasion/admin-ui
+    if [ $# -eq 0 ]
+    then
+        git checkout develop
+    else
+        git checkout $1
+    fi
+    git pull
+    npm run serve
+}
+#
+# starts pref-gw and pref-ui on specific branch, default develop 
+function runpref() {
+    cd ~/vasion/pref-gw
+    make down
+    sudo make up-d
+    cd ~/vasion/pref-ui
     if [ $# -eq 0 ]
     then
         git checkout develop
