@@ -52,13 +52,14 @@ function runadmin() {
     git pull
     npm run serve
 }
-#
+
 # starts pref-gw and pref-ui on specific branch, default develop 
 function runpref() {
-    cd ~/vasion/pref-gw
+    cd ~/vasion/preferences-gw
     make down
     sudo make up-d
-    cd ~/vasion/pref-ui
+    cd ~/vasion/preferences-ui
+    git pull
     if [ $# -eq 0 ]
     then
         git checkout develop
@@ -74,6 +75,23 @@ function fgit() {
     git add -A 
     git commit -m "$1"
     git push
+}
+
+# fast git merge
+function fmerge() {
+    local cbranch=`git branch |grep \* | cut -d ' ' -f2`
+    if [ $# -eq 0 ]
+    then
+        git checkout develop
+        git pull
+        git checkout $cbranch
+        git merge develop
+    else
+        git checkout $1
+        git pull
+        git checkout $cbranch
+        git merge $1
+    fi
 }
 
 # fast update vscode
