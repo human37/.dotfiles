@@ -12,13 +12,12 @@ set undofile
 set incsearch
 set backspace=indent,eol,start
 
-call plug#begin('~/.vim/plugged')
+call plug#begin()
 Plug 'leafgarland/typescript-vim'
 Plug 'mbbill/undotree'
 Plug 'morhetz/gruvbox'
 Plug 'jcherven/jummidark.vim'
 Plug 'reedes/vim-colors-pencil'
-Plug 'nightsense/snow'
 Plug 'DrTom/fsharp-vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-fugitive'

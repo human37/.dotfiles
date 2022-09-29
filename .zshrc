@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH="/home/$USER/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Case-sensitive completion must be off. _ and - will be interchangeable.
 HYPHEN_INSENSITIVE="true"
@@ -27,14 +27,14 @@ alias ls="lsd"
 # uses open instead of xdg-open
 alias open="xdg-open"
 
-# shortcut for apt install
-alias install="sudo apt install"
-
 # reinit database and make rabbit dir
 function fullclean() {
     make down
     sudo rm -rf .docker-storage
     sudo mkdir -p .docker-storage/rabbitmq/logs/; sudo chmod -R 777 .docker-storage/rabbitmq/logs/
+    sudo mkdir -p .docker-storage/rabbitmq/data/; sudo chmod -R 777 .docker-storage/rabbitmq/data/
+    sudo mkdir -p .docker-storage/rabbitmq/mnesia/; sudo chmod -R 777 .docker-storage/rabbitmq/mnesia/
+    sudo mkdir -p .docker-storage/mysql/; sudo chmod -R 777 .docker-storage/rabbitmq/logs/
 } 
 
 # starts admin-gw and admin-ui on specific branch, default develop 
@@ -104,9 +104,8 @@ function update-code() {
 export PATH="/home/$USER/.cargo/bin:$PATH"
 
 # adds golang to path
-export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 
 # adds spotifyd to path
 alias spotifyd="/home/$USER/Documents/pers/spotifyd/target/release/spotifyd"
@@ -123,11 +122,14 @@ export night() {
     gsettings set org.gnome.desktop.interface gtk-theme "Yaru-dark"
 }
 
-# ~/.zshrc
-eval "$(starship init zsh)"
+source <(/snap/starship/2049/bin/starship init zsh --print-full-init)
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 # add vasion CLI to path
 export PATH="$HOME/.vasion/bin:$PATH"
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
