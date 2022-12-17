@@ -16,7 +16,13 @@ ENABLE_CORRECTION="false"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Which plugins would you like to load?
-plugins=(git)
+plugins=(
+    git
+#    zsh-autosuggestions
+)
+
+#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="#DCDCDC"
+
 
 # Runs my oh-my-zsh
 source $ZSH/oh-my-zsh.sh
@@ -34,7 +40,11 @@ function fullclean() {
     sudo mkdir -p .docker-storage/rabbitmq/logs/; sudo chmod -R 777 .docker-storage/rabbitmq/logs/
     sudo mkdir -p .docker-storage/rabbitmq/data/; sudo chmod -R 777 .docker-storage/rabbitmq/data/
     sudo mkdir -p .docker-storage/rabbitmq/mnesia/; sudo chmod -R 777 .docker-storage/rabbitmq/mnesia/
-    sudo mkdir -p .docker-storage/mysql/; sudo chmod -R 777 .docker-storage/rabbitmq/logs/
+    sudo mkdir -p .docker-storage/redis-data/; sudo chmod -R 777 .docker-storage/redis-data/
+    sudo mkdir -p .docker-storage/storage_efs/; sudo chmod -R 777 .docker-storage/storage_efs/
+    sudo mkdir -p .docker-storage/mysql/; sudo chmod -R 777 .docker-storage/mysql/
+    sudo mkdir -p .docker-storage/air/; sudo chmod -R 777 .docker-storage/air/
+    sudo chmod -R g+rw "$HOME/.docker"
 } 
 
 # starts admin-gw and admin-ui on specific branch, default develop 
@@ -103,6 +113,9 @@ function update-code() {
 # adds cargo to path
 export PATH="/home/$USER/.cargo/bin:$PATH"
 
+# adds code to path
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+
 # adds golang to path
 export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
@@ -113,23 +126,16 @@ alias spotifyd="/home/$USER/Documents/pers/spotifyd/target/release/spotifyd"
 # makes spt launch spotifyd if not running
 alias spt="/home/$USER/.scripts/launchspt"
 
-# programatically switch day/night mode
-export day() {
-    gsettings set org.gnome.desktop.interface gtk-theme "Yaru-light"
-}
+eval $(/opt/homebrew/bin/brew shellenv)
 
-export night() {
-    gsettings set org.gnome.desktop.interface gtk-theme "Yaru-dark"
-}
+eval "$(starship init zsh)"
 
-source <(/snap/starship/2049/bin/starship init zsh --print-full-init)
+export PATH="$PATH:GOPRIVATE="github.com/PrinterLogic/*""
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
-# add vasion CLI to path
-export PATH="$HOME/.vasion/bin:$PATH"
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
