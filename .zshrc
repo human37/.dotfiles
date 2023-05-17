@@ -30,9 +30,6 @@ source $ZSH/oh-my-zsh.sh
 # uses lsd instead of ls
 alias ls="lsd"
 
-# uses open instead of xdg-open
-alias open="xdg-open"
-
 # reinit database and make rabbit dir
 function fullclean() {
     make down
@@ -44,6 +41,7 @@ function fullclean() {
     sudo mkdir -p .docker-storage/storage_efs/; sudo chmod -R 777 .docker-storage/storage_efs/
     sudo mkdir -p .docker-storage/mysql/; sudo chmod -R 777 .docker-storage/mysql/
     sudo mkdir -p .docker-storage/air/; sudo chmod -R 777 .docker-storage/air/
+    sudo mkdir -p .docker-storage/camunda/; sudo chmod -R 777 .docker-storage/camunda/
     sudo chmod -R g+rw "$HOME/.docker"
 } 
 
@@ -111,7 +109,7 @@ function update-code() {
 }
 
 # adds cargo to path
-export PATH="/home/$USER/.cargo/bin:$PATH"
+source "$HOME/.cargo/env"
 
 # adds code to path
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
@@ -135,7 +133,15 @@ export PATH="$PATH:GOPRIVATE="github.com/PrinterLogic/*""
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
+. "/opt/homebrew/opt/asdf/libexec/asdf.sh"
 
-#export NVM_DIR="$HOME/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+alias vim='/Users/ammon.taylor/.local/bin/lvim'
+export EDITOR='nvim'
+
+# loads secret env vars
+source "$HOME/.env.sh"
+
+# changes nvims default directory
+export PATH=~/.npm-global/bin:$PATH
+
+
