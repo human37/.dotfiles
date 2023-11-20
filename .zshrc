@@ -40,8 +40,16 @@ function fullclean() {
     sudo mkdir -p .docker-storage/redis-data/; sudo chmod -R 777 .docker-storage/redis-data/
     sudo mkdir -p .docker-storage/storage_efs/; sudo chmod -R 777 .docker-storage/storage_efs/
     sudo mkdir -p .docker-storage/mysql/; sudo chmod -R 777 .docker-storage/mysql/
+    sudo mkdir -p .docker-storage/dev/; sudo chmod -R 777 .docker-storage/dev/
+    sudo mkdir -p .docker-storage/db-identity/; sudo chmod -R 777 .docker-storage/db-identity/
     sudo mkdir -p .docker-storage/air/; sudo chmod -R 777 .docker-storage/air/
     sudo mkdir -p .docker-storage/camunda/; sudo chmod -R 777 .docker-storage/camunda/
+    sudo mkdir -p .docker-storage/minio/config/; sudo chmod -R 777 .docker-storage/minio/config/
+    sudo mkdir -p .docker-storage/minio/data/; sudo chmod -R 777 .docker-storage/minio/data/
+    sudo mkdir -p .docker-storage/mongo/db/; sudo chmod -R 777 .docker-storage/mongo/db/
+    sudo mkdir -p .docker-storage/api-server/certs/; sudo chmod -R 777 .docker-storage/api-server/certs/
+    sudo mkdir -p .docker-storage/formio-pdf-server/certs/; sudo chmod -R 777 .docker-storage/formio-pdf-server/certs/
+    sudo mkdir -p .docker-storage/formio-api-server/certs/; sudo chmod -R 777 .docker-storage/formio-api-server/certs/
     sudo chmod -R g+rw "$HOME/.docker"
 } 
 
