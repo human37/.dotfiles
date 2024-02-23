@@ -3,4 +3,7 @@ success_symbol = "[❯](bold fg:7)"
 error_symbol = "[❯](bold fg:160)"
 
 [git_branch]
-style = "fg:11"
+style = "fg:199"
+
+[directory]
+style= "fg:214"

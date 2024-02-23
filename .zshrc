@@ -110,6 +110,15 @@ function fmerge() {
     fi
 }
 
+# reclones vac, moves .env.local, deletes old vac 
+function reset-vac() {
+    cd ~/Documents
+    git clone git@github.com:PrinterLogic/vac.git vac-new
+    mv ~/Documents/vac/apps/login/.env.local ~/Documents/vac-new/apps/login/.env.local
+    sudo rm -rf ~/Documents/vac
+    mv ~/Documents/vac-new ~/Documents/vac
+}
+
 # fast update vscode
 function update-code() {
     wget 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -O /tmp/code_latest_amd64.deb
@@ -151,5 +160,14 @@ source "$HOME/.env.sh"
 
 # changes nvims default directory
 export PATH=~/.npm-global/bin:$PATH
+
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
+alias zed="open -a /Applications/Zed.app -n"
+
+
+eval "$(zoxide init zsh)"
+
+alias cd=z
 
 
