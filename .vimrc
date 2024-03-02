@@ -12,24 +12,6 @@ set undofile
 set incsearch
 set backspace=indent,eol,start
 
-call plug#begin()
-Plug 'leafgarland/typescript-vim'
-Plug 'mbbill/undotree'
-Plug 'morhetz/gruvbox'
-Plug 'jcherven/jummidark.vim'
-Plug 'reedes/vim-colors-pencil'
-Plug 'DrTom/fsharp-vim'
-Plug 'jiangmiao/auto-pairs'
-Plug 'tpope/vim-fugitive'
-Plug 'preservim/nerdtree'
-Plug 'xuyuanp/nerdtree-git-plugin'
-Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'rust-lang/rust.vim'
-Plug 'dense-analysis/ale'
-Plug 'sheerun/vim-polyglot'
-call plug#end()
-
-colorscheme jummidark
 hi Normal guibg=NONE ctermbg=NONE
 map <C-n> :NERDTreeToggle<CR>
 let g:cpp_member_variable_highlight = 1

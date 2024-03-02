@@ -18,10 +18,10 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Which plugins would you like to load?
 plugins=(
     git
-#    zsh-autosuggestions
+    zsh-autosuggestions
 )
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#808080,bg=none"
 
-#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="#DCDCDC"
 
 
 # Runs my oh-my-zsh
@@ -30,63 +30,7 @@ source $ZSH/oh-my-zsh.sh
 # uses lsd instead of ls
 alias ls="lsd"
 
-# reinit database and make rabbit dir
-function fullclean() {
-    make down
-    sudo rm -rf .docker-storage
-    sudo mkdir -p .docker-storage/rabbitmq/logs/; sudo chmod -R 777 .docker-storage/rabbitmq/logs/
-    sudo mkdir -p .docker-storage/rabbitmq/data/; sudo chmod -R 777 .docker-storage/rabbitmq/data/
-    sudo mkdir -p .docker-storage/rabbitmq/mnesia/; sudo chmod -R 777 .docker-storage/rabbitmq/mnesia/
-    sudo mkdir -p .docker-storage/redis-data/; sudo chmod -R 777 .docker-storage/redis-data/
-    sudo mkdir -p .docker-storage/storage_efs/; sudo chmod -R 777 .docker-storage/storage_efs/
-    sudo mkdir -p .docker-storage/mysql/; sudo chmod -R 777 .docker-storage/mysql/
-    sudo mkdir -p .docker-storage/dev/; sudo chmod -R 777 .docker-storage/dev/
-    sudo mkdir -p .docker-storage/db-identity/; sudo chmod -R 777 .docker-storage/db-identity/
-    sudo mkdir -p .docker-storage/air/; sudo chmod -R 777 .docker-storage/air/
-    sudo mkdir -p .docker-storage/camunda/; sudo chmod -R 777 .docker-storage/camunda/
-    sudo mkdir -p .docker-storage/minio/config/; sudo chmod -R 777 .docker-storage/minio/config/
-    sudo mkdir -p .docker-storage/minio/data/; sudo chmod -R 777 .docker-storage/minio/data/
-    sudo mkdir -p .docker-storage/mongo/db/; sudo chmod -R 777 .docker-storage/mongo/db/
-    sudo mkdir -p .docker-storage/api-server/certs/; sudo chmod -R 777 .docker-storage/api-server/certs/
-    sudo mkdir -p .docker-storage/formio-pdf-server/certs/; sudo chmod -R 777 .docker-storage/formio-pdf-server/certs/
-    sudo mkdir -p .docker-storage/formio-api-server/certs/; sudo chmod -R 777 .docker-storage/formio-api-server/certs/
-    sudo chmod -R g+rw "$HOME/.docker"
-} 
-
-# starts admin-gw and admin-ui on specific branch, default develop 
-function runadmin() {
-    cd ~/vasion/admin-gw
-    make down
-    sudo make up-d
-    cd ~/vasion/admin-ui
-    if [ $# -eq 0 ]
-    then
-        git checkout develop
-    else
-        git checkout $1
-    fi
-    git pull
-    npm run serve
-}
-
-# starts pref-gw and pref-ui on specific branch, default develop 
-function runpref() {
-    cd ~/vasion/preferences-gw
-    make down
-    sudo make up-d
-    cd ~/vasion/preferences-ui
-    git pull
-    if [ $# -eq 0 ]
-    then
-        git checkout develop
-    else
-        git checkout $1
-    fi
-    git pull
-    npm run serve
-}
-
-# fast git
+# fast git add, commit, and push
 function fgit() {
     git add -A 
     git commit -m "$1"
@@ -98,10 +42,10 @@ function fmerge() {
     local cbranch=`git branch |grep \* | cut -d ' ' -f2`
     if [ $# -eq 0 ]
     then
-        git checkout develop
+        git checkout main
         git pull
         git checkout $cbranch
-        git merge develop
+        git merge main
     else
         git checkout $1
         git pull
@@ -110,64 +54,63 @@ function fmerge() {
     fi
 }
 
-# reclones vac, moves .env.local, deletes old vac 
-function reset-vac() {
-    cd ~/Documents
-    git clone git@github.com:PrinterLogic/vac.git vac-new
-    mv ~/Documents/vac/apps/login/.env.local ~/Documents/vac-new/apps/login/.env.local
-    sudo rm -rf ~/Documents/vac
-    mv ~/Documents/vac-new ~/Documents/vac
+# fast full clean docker
+function fcdocker() {
+    echo "Stopping all Docker containers..."
+    docker stop $(docker ps -aq) 2>/dev/null
+    echo "Removing all stopped containers..."
+    docker rm $(docker ps -a -q) 2>/dev/null
+    echo "Removing all dangling images..."
+    docker rmi $(docker images -f "dangling=true" -q) 2>/dev/null
+    echo "Removing all unused images, not just dangling ones..."
+    docker image prune -a --force 2>/dev/null
+    echo "Removing all unused volumes..."
+    docker volume prune --force 2>/dev/null
+    echo "Removing all unused networks..."
+    docker network prune --force 2>/dev/null
+    echo "Docker storage cleaned."
 }
 
-# fast update vscode
-function update-code() {
-    wget 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -O /tmp/code_latest_amd64.deb
-    sudo dpkg -i /tmp/code_latest_amd64.deb
+# Runs a gradle command while adding local.env vars
+function grun() {
+     # Start with an empty command string
+    local command=""
+    
+    # Ensure the last line is processed by appending a newline to the input
+    while IFS='=' read -r key value || [[ -n $key ]]; do
+        # Check if key is non-empty to avoid appending uninitialized variables
+        if [[ -n $key ]]; then
+            # Properly quote the value to handle spaces and special characters
+            # Note: Adjusting the syntax to ensure correct handling of special characters
+            command+=" $key='$value'"
+        fi
+    done < "${PWD}/local.env"
+    
+    # Append the actual command to be executed
+    command+=" ./gradlew $@"
+    
+    # Print the command to be executed (for debugging purposes)
+    echo "Executing command: $command"
+    
+    # Use eval to execute the constructed command
+    eval "$command"
 }
-
-# adds cargo to path
-source "$HOME/.cargo/env"
-
-# adds code to path
-export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-
-# adds golang to path
-export GOPATH=$HOME/go
-export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
-
-# adds spotifyd to path
-alias spotifyd="/home/$USER/Documents/pers/spotifyd/target/release/spotifyd"
-
-# makes spt launch spotifyd if not running
-alias spt="/home/$USER/.scripts/launchspt"
-
-eval $(/opt/homebrew/bin/brew shellenv)
 
 eval "$(starship init zsh)"
 
-export PATH="$PATH:GOPRIVATE="github.com/PrinterLogic/*""
-
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-
-. "/opt/homebrew/opt/asdf/libexec/asdf.sh"
-
-alias vim='/Users/ammon.taylor/.local/bin/lvim'
-export EDITOR='nvim'
-
-# loads secret env vars
-source "$HOME/.env.sh"
-
-# changes nvims default directory
-export PATH=~/.npm-global/bin:$PATH
 
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 alias zed="open -a /Applications/Zed.app -n"
 
-
 eval "$(zoxide init zsh)"
 
 alias cd=z
 
+# add asdf
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
 
+# set java home
+. ~/.asdf/plugins/java/set-java-home.zsh
