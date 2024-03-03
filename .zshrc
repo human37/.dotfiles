@@ -96,6 +96,32 @@ function grun() {
     eval "$command"
 }
 
+
+# Runs a gradle command while adding local.env vars in debug mode
+function gdebug() {
+     # Start with an empty command string
+    local command=""
+    
+    # Ensure the last line is processed by appending a newline to the input
+    while IFS='=' read -r key value || [[ -n $key ]]; do
+        # Check if key is non-empty to avoid appending uninitialized variables
+        if [[ -n $key ]]; then
+            # Properly quote the value to handle spaces and special characters
+            # Note: Adjusting the syntax to ensure correct handling of special characters
+            command+=" $key='$value'"
+        fi
+    done < "${PWD}/local.env"
+    
+    # Append the actual command to be executed
+    command+=" ./gradlew $@ --debug-jvm"
+    
+    # Print the command to be executed (for debugging purposes)
+    echo "Executing command: $command"
+    
+    # Use eval to execute the constructed command
+    eval "$command"
+}
+
 eval "$(starship init zsh)"
 
 # Generated for envman. Do not edit.

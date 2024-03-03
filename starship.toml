@@ -7,3 +7,6 @@ style = "fg:199"
 
 [directory]
 style= "fg:214"
+
+[java]
+style = "red"
