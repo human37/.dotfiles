@@ -23,7 +23,6 @@ plugins=(
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#808080,bg=none"
 
 
-
 # Runs my oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
@@ -54,21 +53,57 @@ function fmerge() {
     fi
 }
 
+# light mode
+function mlight() {
+    osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to false'
+}
+
+# dark mode
+function mdark() {
+    osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to true'
+}
+
 # fast full clean docker
 function fcdocker() {
-    echo "Stopping all Docker containers..."
+    echo "stopping all docker containers..."
     docker stop $(docker ps -aq) 2>/dev/null
-    echo "Removing all stopped containers..."
+    echo "removing all stopped containers..."
     docker rm $(docker ps -a -q) 2>/dev/null
-    echo "Removing all dangling images..."
+    echo "removing all dangling images..."
     docker rmi $(docker images -f "dangling=true" -q) 2>/dev/null
-    echo "Removing all unused images, not just dangling ones..."
+    echo "removing all unused images, not just dangling ones..."
     docker image prune -a --force 2>/dev/null
-    echo "Removing all unused volumes..."
+    echo "removing all unused volumes..."
     docker volume prune --force 2>/dev/null
-    echo "Removing all unused networks..."
+    echo "removing all unused networks..."
     docker network prune --force 2>/dev/null
-    echo "Docker storage cleaned."
+    echo "docker storage cleaned."
+}
+
+# fast docker compose up
+function fdocker() {
+    local localDir="${PWD}"
+    local runningContainers=$(docker ps -q)
+    
+    if [[ -n "$runningContainers" ]]; then
+        echo "stopping running containers..."
+        docker stop $(docker ps -a -q)
+    fi
+
+    cd /Users/ammon/zonos/DockerResources
+    for dir in "$@"; do
+        if [[ -d "$dir" ]]; then
+            echo "entering directory $dir"
+            cd "$dir" || return # change to the directory or exit if it fails
+      
+            docker compose up -d
+            echo "started container $dir"
+            cd - || return # return to the previous directory
+        else
+            echo "directory $dir does not exist."
+        fi
+    done
+    cd $localDir 
 }
 
 # Runs a gradle command while adding local.env vars
@@ -90,12 +125,11 @@ function grun() {
     command+=" ./gradlew $@"
     
     # Print the command to be executed (for debugging purposes)
-    echo "Executing command: $command"
+    echo "executing command: $command"
     
     # Use eval to execute the constructed command
     eval "$command"
 }
-
 
 # Runs a gradle command while adding local.env vars in debug mode
 function gdebug() {
@@ -116,7 +150,7 @@ function gdebug() {
     command+=" ./gradlew $@ --debug-jvm"
     
     # Print the command to be executed (for debugging purposes)
-    echo "Executing command: $command"
+    echo "executing command: $command"
     
     # Use eval to execute the constructed command
     eval "$command"
