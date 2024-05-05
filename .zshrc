@@ -16,7 +16,12 @@ ENABLE_CORRECTION="false"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Which plugins would you like to load?
-plugins=(git)
+plugins=(
+    git
+    zsh-autosuggestions
+)
+# ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#808080,bg=none"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 
 # Runs my oh-my-zsh
 source $ZSH/oh-my-zsh.sh
@@ -24,53 +29,7 @@ source $ZSH/oh-my-zsh.sh
 # uses lsd instead of ls
 alias ls="lsd"
 
-# uses open instead of xdg-open
-alias open="xdg-open"
-
-# reinit database and make rabbit dir
-function fullclean() {
-    make down
-    sudo rm -rf .docker-storage
-    sudo mkdir -p .docker-storage/rabbitmq/logs/; sudo chmod -R 777 .docker-storage/rabbitmq/logs/
-    sudo mkdir -p .docker-storage/rabbitmq/data/; sudo chmod -R 777 .docker-storage/rabbitmq/data/
-    sudo mkdir -p .docker-storage/rabbitmq/mnesia/; sudo chmod -R 777 .docker-storage/rabbitmq/mnesia/
-    sudo mkdir -p .docker-storage/mysql/; sudo chmod -R 777 .docker-storage/rabbitmq/logs/
-} 
-
-# starts admin-gw and admin-ui on specific branch, default develop 
-function runadmin() {
-    cd ~/vasion/admin-gw
-    make down
-    sudo make up-d
-    cd ~/vasion/admin-ui
-    if [ $# -eq 0 ]
-    then
-        git checkout develop
-    else
-        git checkout $1
-    fi
-    git pull
-    npm run serve
-}
-
-# starts pref-gw and pref-ui on specific branch, default develop 
-function runpref() {
-    cd ~/vasion/preferences-gw
-    make down
-    sudo make up-d
-    cd ~/vasion/preferences-ui
-    git pull
-    if [ $# -eq 0 ]
-    then
-        git checkout develop
-    else
-        git checkout $1
-    fi
-    git pull
-    npm run serve
-}
-
-# fast git
+# fast git add, commit, and push
 function fgit() {
     git add -A 
     git commit -m "$1"
@@ -82,10 +41,10 @@ function fmerge() {
     local cbranch=`git branch |grep \* | cut -d ' ' -f2`
     if [ $# -eq 0 ]
     then
-        git checkout develop
+        git checkout main
         git pull
         git checkout $cbranch
-        git merge develop
+        git merge main
     else
         git checkout $1
         git pull
@@ -94,42 +53,172 @@ function fmerge() {
     fi
 }
 
-# fast update vscode
-function update-code() {
-    wget 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -O /tmp/code_latest_amd64.deb
-    sudo dpkg -i /tmp/code_latest_amd64.deb
+# light mode
+function mlight() {
+    osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to false'
 }
 
-# adds cargo to path
-export PATH="/home/$USER/.cargo/bin:$PATH"
-
-# adds golang to path
-export GOPATH=$HOME/go
-export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
-
-# adds spotifyd to path
-alias spotifyd="/home/$USER/Documents/pers/spotifyd/target/release/spotifyd"
-
-# makes spt launch spotifyd if not running
-alias spt="/home/$USER/.scripts/launchspt"
-
-# programatically switch day/night mode
-export day() {
-    gsettings set org.gnome.desktop.interface gtk-theme "Yaru-light"
+# dark mode
+function mdark() {
+    osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to true'
 }
 
-export night() {
-    gsettings set org.gnome.desktop.interface gtk-theme "Yaru-dark"
+# fast full clean docker
+function fcdocker() {
+    echo "stopping all docker containers..."
+    docker stop $(docker ps -aq) 2>/dev/null
+    echo "removing all stopped containers..."
+    docker rm $(docker ps -a -q) 2>/dev/null
+    echo "removing all dangling images..."
+    docker rmi $(docker images -f "dangling=true" -q) 2>/dev/null
+    echo "removing all unused images, not just dangling ones..."
+    docker image prune -a --force 2>/dev/null
+    echo "removing all unused volumes..."
+    docker volume prune --force 2>/dev/null
+    echo "removing all unused networks..."
+    docker network prune --force 2>/dev/null
+    echo "docker storage cleaned."
+    docker network create zonos
 }
 
-source <(/snap/starship/2049/bin/starship init zsh --print-full-init)
+# fast docker compose up
+function fdocker() {
+    local localDir="${PWD}"
+    local runningContainers=$(docker ps -q)
+    
+    if [[ -n "$runningContainers" ]]; then
+        echo "stopping running containers..."
+        docker stop $(docker ps -a -q)
+    fi
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+    cd /Users/ammon/zonos/DockerResources
+    for dir in "$@"; do
+        if [[ -d "$dir" ]]; then
+            echo "entering directory $dir"
+            cd "$dir" || return # change to the directory or exit if it fails
+      
+            docker compose up -d
+            echo "started container $dir"
+            cd - || return # return to the previous directory
+        else
+            echo "directory $dir does not exist."
+        fi
+    done
+    cd $localDir 
+}
 
-# add vasion CLI to path
-export PATH="$HOME/.vasion/bin:$PATH"
+function aws_login() {
+    PROFILE=$1
+    TOKEN=$2
+    # bail if no args are passed
+    if [[ -z "$TOKEN" || -z "$PROFILE" ]]; then
+      echo "missing args: aws_login <username> <mfa_code>"
+      return
+    fi
+    data=$(aws --profile zdops sts get-session-token --duration-seconds 129600 --serial-number arn:aws:iam::127143654397:mfa/$PROFILE --token-code "$TOKEN")
+    ak=$(echo "$data" | jq -r '.Credentials.AccessKeyId')
+    sk=$(echo "$data" | jq -r '.Credentials.SecretAccessKey')
+    st=$(echo "$data" | jq -r '.Credentials.SessionToken')
+    aws configure set aws_access_key_id "$ak" --profile mfa
+    aws configure set aws_secret_access_key "$sk" --profile mfa
+    aws configure set aws_session_token "$st" --profile mfa
+}
 
+function aws_ssm () {
+    SERVICE=$1
+    ENV_STR=$2
+    if [ -z "$SERVICE" ]
+    then
+            echo "missing args: aws_ssm <service> [env]"
+            return
+    fi
+    if [[ "$SERVICE" == */* ]]
+    then
+            SSM_PATH=$1
+    else
+            SSM_PATH=/$ENV_STR/apps/$SERVICE/secrets
+    fi
+    if [[ $SSM_PATH != */ ]]
+    then
+            SSM_PATH=${SSM_PATH}/
+    fi
+    echo "Results for: $SSM_PATH"
+    aws --profile mfa --region us-east-2 ssm get-parameters-by-path --path "$SSM_PATH" --recursive --with-decryption --query "Parameters[*].{Name:Name,Value:Value}" | jq -r '.[] | .Name['${#SSM_PATH}':] + "=" + (.Value | gsub("\n"; "\\n"))' | sort
+}
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Runs a gradle command while adding local.env vars
+function grun() {
+     # Start with an empty command string
+    local command=""
+    
+    # Ensure the last line is processed by appending a newline to the input
+    while IFS='=' read -r key value || [[ -n $key ]]; do
+        # check if commented out
+        if [[ $key == \#* ]]; then
+            continue
+        fi
+        # Check if key is non-empty to avoid appending uninitialized variables
+        if [[ -n $key ]]; then
+            # Properly quote the value to handle spaces and special characters
+            # Note: Adjusting the syntax to ensure correct handling of special characters
+            command+=" $key='$value'"
+        fi
+    done < "${PWD}/local.env"
+    
+    # Append the actual command to be executed
+    command+=" ./gradlew -Dspring.output.ansi.enabled=always $@"
+    
+    # Print the command to be executed (for debugging purposes)
+    echo "executing command: $command"
+    
+    # Use eval to execute the constructed command
+    eval "$command"
+}
+
+# Runs a gradle command while adding local.env vars in debug mode
+function gdebug() {
+     # Start with an empty command string
+    local command=""
+    
+    # Ensure the last line is processed by appending a newline to the input
+    while IFS='=' read -r key value || [[ -n $key ]]; do
+        # check if commented out
+        if [[ $key == \#* ]]; then
+            continue
+        fi
+        # Check if key is non-empty to avoid appending uninitialized variables
+        if [[ -n $key ]]; then
+            # Properly quote the value to handle spaces and special characters
+            # Note: Adjusting the syntax to ensure correct handling of special characters
+            command+=" $key='$value'"
+        fi
+    done < "${PWD}/local.env"
+    
+    # Append the actual command to be executed
+    command+=" ./gradlew $@ --debug-jvm"
+    
+    # Print the command to be executed (for debugging purposes)
+    echo "executing command: $command"
+    
+    # Use eval to execute the constructed command
+    eval "$command"
+}
+
+eval "$(starship init zsh)"
+
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
+alias zed="open -a /Applications/Zed.app -n"
+
+eval "$(zoxide init zsh)"
+
+alias cd=z
+
+# add asdf
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+# set java home
+. ~/.asdf/plugins/java/set-java-home.zsh
