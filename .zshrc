@@ -20,8 +20,8 @@ plugins=(
     git
     zsh-autosuggestions
 )
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#808080,bg=none"
-
+# ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#808080,bg=none"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 
 # Runs my oh-my-zsh
 source $ZSH/oh-my-zsh.sh
@@ -78,6 +78,7 @@ function fcdocker() {
     echo "removing all unused networks..."
     docker network prune --force 2>/dev/null
     echo "docker storage cleaned."
+    docker network create zonos
 }
 
 # fast docker compose up
@@ -106,6 +107,45 @@ function fdocker() {
     cd $localDir 
 }
 
+function aws_login() {
+    PROFILE=$1
+    TOKEN=$2
+    # bail if no args are passed
+    if [[ -z "$TOKEN" || -z "$PROFILE" ]]; then
+      echo "missing args: aws_login <username> <mfa_code>"
+      return
+    fi
+    data=$(aws --profile zdops sts get-session-token --duration-seconds 129600 --serial-number arn:aws:iam::127143654397:mfa/$PROFILE --token-code "$TOKEN")
+    ak=$(echo "$data" | jq -r '.Credentials.AccessKeyId')
+    sk=$(echo "$data" | jq -r '.Credentials.SecretAccessKey')
+    st=$(echo "$data" | jq -r '.Credentials.SessionToken')
+    aws configure set aws_access_key_id "$ak" --profile mfa
+    aws configure set aws_secret_access_key "$sk" --profile mfa
+    aws configure set aws_session_token "$st" --profile mfa
+}
+
+function aws_ssm () {
+    SERVICE=$1
+    ENV_STR=$2
+    if [ -z "$SERVICE" ]
+    then
+            echo "missing args: aws_ssm <service> [env]"
+            return
+    fi
+    if [[ "$SERVICE" == */* ]]
+    then
+            SSM_PATH=$1
+    else
+            SSM_PATH=/$ENV_STR/apps/$SERVICE/secrets
+    fi
+    if [[ $SSM_PATH != */ ]]
+    then
+            SSM_PATH=${SSM_PATH}/
+    fi
+    echo "Results for: $SSM_PATH"
+    aws --profile mfa --region us-east-2 ssm get-parameters-by-path --path "$SSM_PATH" --recursive --with-decryption --query "Parameters[*].{Name:Name,Value:Value}" | jq -r '.[] | .Name['${#SSM_PATH}':] + "=" + (.Value | gsub("\n"; "\\n"))' | sort
+}
+
 # Runs a gradle command while adding local.env vars
 function grun() {
      # Start with an empty command string
@@ -113,6 +153,10 @@ function grun() {
     
     # Ensure the last line is processed by appending a newline to the input
     while IFS='=' read -r key value || [[ -n $key ]]; do
+        # check if commented out
+        if [[ $key == \#* ]]; then
+            continue
+        fi
         # Check if key is non-empty to avoid appending uninitialized variables
         if [[ -n $key ]]; then
             # Properly quote the value to handle spaces and special characters
@@ -122,7 +166,7 @@ function grun() {
     done < "${PWD}/local.env"
     
     # Append the actual command to be executed
-    command+=" ./gradlew $@"
+    command+=" ./gradlew -Dspring.output.ansi.enabled=always $@"
     
     # Print the command to be executed (for debugging purposes)
     echo "executing command: $command"
@@ -138,6 +182,10 @@ function gdebug() {
     
     # Ensure the last line is processed by appending a newline to the input
     while IFS='=' read -r key value || [[ -n $key ]]; do
+        # check if commented out
+        if [[ $key == \#* ]]; then
+            continue
+        fi
         # Check if key is non-empty to avoid appending uninitialized variables
         if [[ -n $key ]]; then
             # Properly quote the value to handle spaces and special characters
