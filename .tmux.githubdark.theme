@@ -22,7 +22,7 @@ set -g status-left-style NONE
 set -g status-right-style NONE
 
 set -g status-left "#[fg=#0e1116,bg=#0349b4,bold] #S #[fg=#0349b4,bg=default,nobold,nounderscore,noitalics]"
-set -g status-right "#[fg=#0e1116,bg=default,nobold,nounderscore,noitalics]#[fg=#0e1116,bg=default] #{prefix_highlight} #[fg=#babbbd,bg=default,nobold,nounderscore,noitalics]#[fg=#ffffff,bg=default] %Y-%m-%d  %I:%M %p #[fg=#0366d6,bg=default,nobold,nounderscore,noitalics]#[fg=#0e1116,bg=#0366d6,bold] #h "
+set -g status-right "#[fg=#0e1116,bg=default,nobold,nounderscore,noitalics]#[fg=#0e1116,bg=default] #{prefix_highlight} #[fg=#babbbd,bg=default,nobold,nounderscore,noitalics]#[fg=#ffffff,bg=default] %Y-%m-%d #[fg=#0366d6,bg=default,nobold,nounderscore,noitalics]#[fg=#0e1116,bg=#0366d6,bold] #(who | cut -d \" \" -f1) "
 
 setw -g window-status-activity-style "underscore,fg=#66707b,bg=default"
 setw -g window-status-separator ""

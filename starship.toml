@@ -1,12 +1,18 @@
-[character]
-success_symbol = "[❯](bold fg:7)"
-error_symbol = "[❯](bold fg:160)"
+[battery]
+full_symbol = "• "
+charging_symbol = "⇡ "
+discharging_symbol = "⇣ "
+unknown_symbol = "❓ "
+empty_symbol = "❗ "
 
-[git_branch]
-style = "fg:199"
+[erlang]
+symbol = "ⓔ "
 
-[directory]
-style= "fg:214"
+[nodejs]
+symbol = "[⬢](bold green) "
 
-[java]
-style = "red"
+[pulumi]
+symbol = "🧊 "
+
+[typst]
+symbol = "t "
