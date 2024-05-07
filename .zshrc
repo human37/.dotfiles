@@ -29,6 +29,8 @@ source $ZSH/oh-my-zsh.sh
 # uses lsd instead of ls
 alias ls="lsd"
 
+alias code="code-insiders"
+
 # fast git add, commit, and push
 function fgit() {
     git add -A 
