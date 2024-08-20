@@ -29,8 +29,6 @@ source $ZSH/oh-my-zsh.sh
 # uses lsd instead of ls
 alias ls="lsd"
 
-alias code="code-insiders"
-
 # fast git add, commit, and push
 function fgit() {
     git add -A 
@@ -246,8 +244,15 @@ eval "$(zoxide init zsh)"
 
 alias cd=z
 
+alias lzd=lazydocker
+
+# add custom scripts to path
+alias ues="~/.dotfiles/scripts/url_encode.py"
+
 # add asdf
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 # set java home
 . ~/.asdf/plugins/java/set-java-home.zsh
+
+source ~/.dotfiles/secrets.sh
