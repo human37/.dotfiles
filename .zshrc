@@ -7,9 +7,6 @@ eval "$(starship init zsh)"
 # add zioxide
 eval "$(zoxide init zsh)"
 
-# load in aliases
-source ~/.dotfiles/alias.sh
-
 # load secrets into env
 source ~/.dotfiles/secrets.sh
 
@@ -17,3 +14,6 @@ source ~/.dotfiles/secrets.sh
 for script in ~/.dotfiles/scripts/*.sh; do
   source "$script"
 done
+
+# load in aliases
+source ~/.dotfiles/alias.sh
