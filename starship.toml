@@ -11,13 +11,11 @@ symbol = "ⓔ "
 [nodejs]
 symbol = "[⬢](bold green) "
 
+[java]
+style = "bold red"
+
 [pulumi]
 symbol = "🧊 "
 
 [typst]
 symbol = "t "
-
-#[character] # The name of the module we are configuring is 'character'
-#success_symbol = '[-](bold purple)'
-#error_symbol = '[-](bold red)' 
-

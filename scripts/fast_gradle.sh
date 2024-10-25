@@ -18,7 +18,7 @@ function grun() {
     done < "${PWD}/local.env"
     
     # Append the actual command to be executed
-    command+=" ./gradlew -Dspring.output.ansi.enabled=always $@"
+    command+=" SPRING_OUTPUT_ANSI_ENABLED=ALWAYS ./gradlew $@"
     
     # Print the command to be executed (for debugging purposes)
     echo "executing command: $command"
@@ -47,7 +47,7 @@ function gdebug() {
     done < "${PWD}/local.env"
     
     # Append the actual command to be executed
-    command+=" ./gradlew $@ --debug-jvm"
+    command+=" SPRING_OUTPUT_ANSI_ENABLED=ALWAYS ./gradlew $@ --debug-jvm"
     
     # Print the command to be executed (for debugging purposes)
     echo "executing command: $command"

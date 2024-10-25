@@ -12,7 +12,7 @@ source ~/.dotfiles/secrets.sh
 
 # source all scripts in the .dotfiles directory
 for script in ~/.dotfiles/scripts/*.sh; do
-  source "$script"
+    source "$script"
 done
 
 # load in aliases
