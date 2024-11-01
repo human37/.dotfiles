@@ -19,3 +19,8 @@ if [ ! -e ~/.config/starship.toml ]
 then
     ln -s ~/.dotfiles/starship.toml ~/.config/
 fi
+
+if [ ! -e ~/.aerospace.toml ]
+then
+    ln -s ~/.dotfiles/.aerospace.toml ~/.config/
+fi
