@@ -12,3 +12,7 @@ alias ls="lsd"
 
 # uses bat instead of cat
 alias cat="bat"
+
+curlj() {
+    curl "$@" | jq .
+}

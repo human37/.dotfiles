@@ -171,6 +171,7 @@ alt-shift-z = 'move-node-to-workspace Z'
 
 [workspace-to-monitor-force-assignment]
 S = 'built-in' # built in retina display
+N = 'built-in' # built in retina display
 M = 'built-in' # built in retina display
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
