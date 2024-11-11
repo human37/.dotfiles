@@ -16,7 +16,8 @@ diffFilter = delta --color-only
 
 [delta]
 navigate = true
-side-by-side = true
+side-by-side = false
+show-untracked = true
 line-numbers = true
 syntax-theme = Dracula
 features = decorations
@@ -31,9 +32,9 @@ conflictstyle = diff3
 
 [diff]
 colorMoved = default
-	tool = vimdiff
+tool = vimdiff
 
 [color]
 ui = auto
 [difftool]
-	prompt = false
+prompt = false

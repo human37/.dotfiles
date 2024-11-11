@@ -30,3 +30,11 @@ function fpr() {
     fi
     gh pr create --title "$1" --draft --base main --head "$cbranch"
 }
+
+# git diff with untracked files
+function fgd() {
+    # Add untracked files first
+    git add -N .
+    # Run git diff
+    git diff
+}

@@ -13,6 +13,10 @@ alias ls="lsd"
 # uses bat instead of cat
 alias cat="bat"
 
+alias pip="pip3"
+
 curlj() {
     curl "$@" | jq .
 }
+
+alias code=cursor
