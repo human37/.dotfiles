@@ -42,3 +42,21 @@ function rkeys() {
         fi
     done
 }
+
+function jwt() {
+    local token="$1"
+
+    # Validate input
+    if [ -z "$token" ]; then
+        echo "Error: Please provide a JWT token"
+        return 1
+    fi
+
+    # Check if jq is installed
+    if ! command -v jq &>/dev/null; then
+        echo "Error: jq is not installed. Please install it to decode JSON."
+        return 1
+    fi
+
+    echo -n "$token" | awk -F"." '{print $2}' | base64 -d | jq
+}
