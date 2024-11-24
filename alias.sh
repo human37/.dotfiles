@@ -10,6 +10,10 @@ alias zed="open -a /Applications/Zed.app -n"
 # uses lsd instead of ls
 alias ls="lsd"
 
+# ls aliases
+alias l="ls"
+alias ll="ls -la"
+
 # uses bat instead of cat
 alias cat="bat"
 
