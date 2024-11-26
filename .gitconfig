@@ -10,6 +10,8 @@ autoSetupRemote = true
 
 [core]
 pager = delta
+	untrackedCache = true
+	fsmonitor = true
 
 [interactive]
 diffFilter = delta --color-only
@@ -38,3 +40,6 @@ tool = vimdiff
 ui = auto
 [difftool]
 prompt = false
+[status]
+	aheadBehind = false
+	showUntrackedFiles = no

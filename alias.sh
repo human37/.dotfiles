@@ -19,8 +19,12 @@ alias cat="bat"
 
 alias pip="pip3"
 
+# curl with jq
 curlj() {
     curl "$@" | jq .
 }
 
 alias code=cursor
+
+# git aliases
+alias gd=fgd
