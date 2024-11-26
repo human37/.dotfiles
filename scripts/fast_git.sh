@@ -1,7 +1,9 @@
 # fast git add, commit, and push
 function fgit() {
     git add -A
-    git commit -m "$1"
+    # Escape single quotes and join all arguments with spaces
+    local msg=$(printf "%s" "$*" | sed "s/'/'\\\''/g")
+    git commit -m "$msg"
     git push
 }
 
