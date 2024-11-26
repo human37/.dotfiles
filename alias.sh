@@ -28,3 +28,5 @@ alias code=cursor
 
 # git aliases
 alias gd=fgd
+
+alias rl="source ~/.zshrc"
