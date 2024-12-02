@@ -24,6 +24,10 @@ bindkey -v
 # restore ctrl+f binding for autocompletion
 bindkey '^F' forward-char
 
+# enable case-insensitive tab completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+autoload -Uz compinit && compinit
+
 # load antidote for plugins
 source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
 antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
