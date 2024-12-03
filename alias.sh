@@ -10,6 +10,9 @@ alias zed="open -a /Applications/Zed.app -n"
 # uses lsd instead of ls
 alias ls="lsd"
 
+# use lg instead of lazygit
+alias lg=lazygit
+
 # ls aliases
 alias l="ls"
 alias ll="ls -la"

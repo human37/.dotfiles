@@ -19,3 +19,6 @@ symbol = "🧊 "
 
 [typst]
 symbol = "t "
+
+[rust]
+symbol = "🦀 "
