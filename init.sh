@@ -1,21 +1,20 @@
 #!/bin/bash
 
-if [ ! -e ~/.zshrc ]; then
-    ln -s ~/.dotfiles/.zshrc ~/
+# Check if source dotfiles directory exists
+if [ ! -d ~/.dotfiles ]; then
+  echo "Error: ~/.dotfiles directory not found"
+  exit 1
 fi
 
-if [ ! -e ~/.vimrc ]; then
-    ln -s ~/.dotfiles/.vimrc ~/
-fi
+# Create ~/.config directory if it doesn't exist
+mkdir -p ~/.config
 
-if [ ! -e ~/.tmux.conf ]; then
-    ln -s ~/.dotfiles/.tmux.conf ~/
-fi
+# Home directory symlinks
+[ ! -e ~/.zshrc ] && [ -f ~/.dotfiles/.zshrc ] && ln -s ~/.dotfiles/.zshrc ~/
+[ ! -e ~/.vimrc ] && [ -f ~/.dotfiles/.vimrc ] && ln -s ~/.dotfiles/.vimrc ~/
+[ ! -e ~/.tmux.conf ] && [ -f ~/.dotfiles/.tmux.conf ] && ln -s ~/.dotfiles/.tmux.conf ~/
 
-if [ ! -e ~/.config/starship.toml ]; then
-    ln -s ~/.dotfiles/starship.toml ~/.config/
-fi
-
-if [ ! -e ~/.aerospace.toml ]; then
-    ln -s ~/.dotfiles/.aerospace.toml ~/.config/
-fi
+# Config directory symlinks
+[ ! -e ~/.config/starship.toml ] && [ -f ~/.dotfiles/starship.toml ] && ln -s ~/.dotfiles/starship.toml ~/.config/
+[ ! -e ~/.config/aerospace.toml ] && [ -f ~/.dotfiles/.aerospace.toml ] && ln -s ~/.dotfiles/.aerospace.toml ~/.config/
+[ ! -e ~/.config/nvim ] && [ -d ~/.dotfiles/nvim ] && ln -s ~/.dotfiles/nvim ~/.config/nvim

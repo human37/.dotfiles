@@ -24,7 +24,7 @@ alias pip="pip3"
 
 # curl with jq
 curlj() {
-    curl "$@" | jq .
+  curl "$@" | jq .
 }
 
 alias code=cursor
@@ -33,3 +33,5 @@ alias code=cursor
 alias gd=fgd
 
 alias rl="source ~/.zshrc"
+
+alias vim="nvim"
