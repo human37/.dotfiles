@@ -1,4 +1,4 @@
-vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. vim.fn.expand("~/.local/share/nvim/mason/packages/jdtls/lombok.jar")
+vim.env.JDTLS_JVM_ARGS = "-javaagent:" .. vim.fn.expand("~/.local/share/nvim/mason/packages/lombok-nightly/lombok.jar")
 
 local function get_project_java_version()
   local tool_versions_path = vim.fn.getcwd() .. "/.tool-versions"
@@ -30,22 +30,6 @@ local function get_project_java_version()
   }
 end
 
-local function ensure_lombok()
-  local lombok_path = vim.fn.expand("~/.local/share/nvim/mason/packages/jdtls/lombok.jar")
-  if vim.fn.filereadable(lombok_path) == 0 then
-    vim.fn.mkdir(vim.fn.fnamemodify(lombok_path, ":h"), "p")
-    local lombok_url = "https://projectlombok.org/downloads/lombok.jar"
-    vim.notify("downloading lombok...", vim.log.levels.INFO)
-    vim.fn.system({ "curl", "-L", lombok_url, "-o", lombok_path })
-    if vim.fn.filereadable(lombok_path) == 1 then
-      vim.notify("lombok downloaded successfully", vim.log.levels.INFO)
-    else
-      vim.notify("failed to download lombok", vim.log.levels.ERROR)
-    end
-  end
-  return lombok_path
-end
-
 local function get_jdtls_config_dir()
   if vim.fn.has("mac") == 1 then
     if vim.fn.system("uname -m"):find("arm64") then
@@ -64,6 +48,29 @@ local function get_jdtls_config_dir()
   end
 end
 
+local function setup_workspace()
+  local workspace_path = vim.fn.expand("~/.cache/jdtls/workspace")
+  local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+  local project_path = workspace_path .. "/" .. project_name
+  
+  -- Create workspace directory structure
+  local dirs = {
+    workspace_path,
+    project_path,
+    project_path .. "/.metadata",
+    project_path .. "/.metadata/.plugins",
+    project_path .. "/.metadata/.plugins/org.eclipse.core.resources",
+    project_path .. "/.metadata/.plugins/org.eclipse.jdt.core",
+  }
+  
+  for _, dir in ipairs(dirs) do
+    vim.fn.mkdir(dir, "p")
+    os.execute(string.format("chmod 755 %s", vim.fn.shellescape(dir)))
+  end
+  
+  return project_path
+end
+
 return {
   {
     "nvim-java/nvim-java",
@@ -72,22 +79,9 @@ return {
     dependencies = {
       "nvim-java/lua-async-await",
       "nvim-java/nvim-java-core",
-      "nvim-java/nvim-java-test",
-      "nvim-java/nvim-java-dap",
-      "nvim-java/nvim-java-refactor",
       "MunifTanjim/nui.nvim",
       "neovim/nvim-lspconfig",
-      "mfussenegger/nvim-dap",
-      {
-        "williamboman/mason.nvim",
-        opts = {
-          ensure_installed = {
-            "java-debug-adapter",
-            "java-test",
-          },
-          max_concurrent_installers = 10,
-        },
-      },
+      "williamboman/mason.nvim",
     },
     opts = {
       jdk = {
@@ -113,85 +107,75 @@ return {
           end,
         },
         cmd = function()
+          -- Setup workspace first
+          local workspace_path = setup_workspace()
+          
+          -- Use the verified lombok path
+          local lombok_path = vim.fn.expand("~/.local/share/nvim/mason/packages/lombok-nightly/lombok.jar")
+          
+          -- Debug output
+          vim.notify("Using lombok at: " .. lombok_path, vim.log.levels.DEBUG)
+          
           return {
             "jdtls",
-            "--jvm-arg=-javaagent:" .. ensure_lombok(),
             "-configuration",
             vim.fn.expand("~/.local/share/nvim/mason/packages/jdtls/" .. get_jdtls_config_dir()),
             "-data",
-            vim.fn.expand("~/.cache/jdtls-workspace/") .. vim.fn.getcwd():gsub("/", "_"),
+            workspace_path,
+            "--jvm-arg=-Xms1G",
+            "--jvm-arg=-Xmx2G",
             "--jvm-arg=-XX:+UseParallelGC",
             "--jvm-arg=-XX:GCTimeRatio=4",
             "--jvm-arg=-XX:AdaptiveSizePolicyWeight=90",
             "--jvm-arg=-Dsun.zip.disableMemoryMapping=true",
-            "--jvm-arg=-Xmx1G",
-            "--jvm-arg=-Xms100m",
             "--jvm-arg=-Declipse.application=org.eclipse.jdt.ls.core.id1",
             "--jvm-arg=-Dosgi.bundles.defaultStartLevel=4",
             "--jvm-arg=-Declipse.product=org.eclipse.jdt.ls.core.product",
             "--jvm-arg=-Dlog.protocol=true",
             "--jvm-arg=-Dlog.level=ALL",
+            "--jvm-arg=-javaagent:" .. lombok_path,
             "--jvm-arg=--add-modules=ALL-SYSTEM",
-            "--jvm-arg=--add-opens",
-            "--jvm-arg=java.base/java.util=ALL-UNNAMED",
-            "--jvm-arg=--add-opens",
-            "--jvm-arg=java.base/java.lang=ALL-UNNAMED",
+            "--jvm-arg=--add-opens", "java.base/java.util=ALL-UNNAMED",
+            "--jvm-arg=--add-opens", "java.base/java.lang=ALL-UNNAMED",
+            "--jvm-arg=-Dfile.encoding=utf8",
           }
         end,
         root_dir = function()
-          return vim.fs.dirname(vim.fs.find({ "pom.xml", "gradle.build", ".git" }, { upward = true })[1])
+          return require("jdtls.setup").find_root({ "pom.xml", "gradle.build", ".git" })
         end,
         settings = {
           java = {
             configuration = {
               runtimes = {
-                get_project_java_version(),
-              },
-            },
-            compiler = {
-              annotationProcessing = {
-                enabled = true,
+                {
+                  name = get_project_java_version().name,
+                  path = get_project_java_version().path,
+                },
               },
             },
             project = {
               referencedLibraries = {
-                ensure_lombok(),
+                "lib/**/*.jar",
               },
             },
-            jdt = {
-              ls = {
-                lombokSupport = {
-                  enabled = true,
-                },
-              },
+            eclipse = {
+              downloadSources = true,
+            },
+            maven = {
+              downloadSources = true,
+            },
+            implementationsCodeLens = {
+              enabled = true,
+            },
+            referencesCodeLens = {
+              enabled = true,
+            },
+            format = {
+              enabled = true,
             },
           },
         },
-        init_options = {
-          bundles = {},
-          extendedClientCapabilities = {
-            progressReportProvider = false,
-          },
-        },
-      },
-      dap = {
-        config_overrides = {},
       },
     },
-  },
-  {
-    "mfussenegger/nvim-dap",
-    config = function()
-      local dap = require("dap")
-      dap.configurations.java = {
-        {
-          type = "java",
-          request = "attach",
-          name = "Debug (Attach) - Remote",
-          hostName = "127.0.0.1",
-          port = 5005,
-        },
-      }
-    end,
   },
 }
