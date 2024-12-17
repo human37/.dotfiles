@@ -137,6 +137,7 @@ alt-shift-p = 'move-node-to-workspace postman'
 alt-shift-s = 'move-node-to-workspace slack'
 alt-shift-y = 'move-node-to-workspace term'
 
+alt-shift-semicolon = 'mode service'
 
 [workspace-to-monitor-force-assignment]
 slack = 'built-in' # built in retina display
@@ -146,8 +147,6 @@ term = 'main'
 
 
 [mode.service.binding]
-# todo: add service mode
-# alt-semicolon = 'mode service'
 esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main']                # reset layout
 f = ['layout floating tiling', 'mode main']
