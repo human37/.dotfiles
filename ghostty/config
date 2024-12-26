@@ -1,0 +1,28 @@
+## Window
+mouse-hide-while-typing = true
+
+## Clipboard
+clipboard-read = "allow"
+clipboard-paste-protection = false
+
+## Background
+background-opacity = 0.95
+background-blur-radius = 20 
+
+## Theme
+theme = dark:ayu,light:ayu_light
+font-size = 16
+font-thicken
+cursor-style = underline
+
+
+
+
+## Keybindings
+keybind = global:option+space=toggle_quick_terminal
+
+## Quick Terminal 
+quick-terminal-screen = main
+quick-terminal-animation-duration = 0
+
+
