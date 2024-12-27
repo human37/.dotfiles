@@ -21,7 +21,7 @@ cursor-style = underline
 keybind = global:option+space=toggle_quick_terminal
 
 ## Quick Terminal 
-quick-terminal-screen = main
+quick-terminal-screen = macos-menu-bar
 quick-terminal-autohide = false
 quick-terminal-animation-duration = 0
 
@@ -33,3 +33,5 @@ macos-icon-ghost-color = blue
 macos-icon-screen-color = blue
 
 
+# Startup
+command = /opt/homebrew/bin/tmux new -A -s dev

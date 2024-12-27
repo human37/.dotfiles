@@ -52,7 +52,7 @@ local function setup_workspace()
   local workspace_path = vim.fn.expand("~/.cache/jdtls/workspace")
   local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
   local project_path = workspace_path .. "/" .. project_name
-  
+
   -- Create workspace directory structure
   local dirs = {
     workspace_path,
@@ -62,12 +62,12 @@ local function setup_workspace()
     project_path .. "/.metadata/.plugins/org.eclipse.core.resources",
     project_path .. "/.metadata/.plugins/org.eclipse.jdt.core",
   }
-  
+
   for _, dir in ipairs(dirs) do
     vim.fn.mkdir(dir, "p")
     os.execute(string.format("chmod 755 %s", vim.fn.shellescape(dir)))
   end
-  
+
   return project_path
 end
 
@@ -89,7 +89,7 @@ return {
       },
       jdtls = {
         handlers = {
-          ["$/progress"] = function(_, result, ctx)
+          ["$/progress"] = function(_, result)
             if result then
               local value = result.value or {}
               if not value.kind then
@@ -109,13 +109,13 @@ return {
         cmd = function()
           -- Setup workspace first
           local workspace_path = setup_workspace()
-          
+
           -- Use the verified lombok path
           local lombok_path = vim.fn.expand("~/.local/share/nvim/mason/packages/lombok-nightly/lombok.jar")
-          
+
           -- Debug output
           vim.notify("Using lombok at: " .. lombok_path, vim.log.levels.DEBUG)
-          
+
           return {
             "jdtls",
             "-configuration",
@@ -135,8 +135,10 @@ return {
             "--jvm-arg=-Dlog.level=ALL",
             "--jvm-arg=-javaagent:" .. lombok_path,
             "--jvm-arg=--add-modules=ALL-SYSTEM",
-            "--jvm-arg=--add-opens", "java.base/java.util=ALL-UNNAMED",
-            "--jvm-arg=--add-opens", "java.base/java.lang=ALL-UNNAMED",
+            "--jvm-arg=--add-opens",
+            "java.base/java.util=ALL-UNNAMED",
+            "--jvm-arg=--add-opens",
+            "java.base/java.lang=ALL-UNNAMED",
             "--jvm-arg=-Dfile.encoding=utf8",
           }
         end,

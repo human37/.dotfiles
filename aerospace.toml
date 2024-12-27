@@ -45,7 +45,7 @@ key-mapping.preset = 'qwerty'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'WezTerm'
+if.app-name-regex-substring = 'Ghostty'
 run = 'move-node-to-workspace term'
 
 [[on-window-detected]]
@@ -79,6 +79,12 @@ run = 'move-node-to-workspace postman'
 [[on-window-detected]]
 if.app-name-regex-substring = 'Datagrip'
 run = 'move-node-to-workspace db'
+
+[[on-window-detected]]
+if.app-id="com.mitchellh.ghostty"
+run = [
+  'layout floating'
+]
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
