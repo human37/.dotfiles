@@ -1,6 +1,9 @@
 # add asdf
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
 
+# add asdf to PATH
+export PATH="$HOME/.asdf/shims:$HOME/.asdf/bin:$PATH"
+
 # add starship
 eval "$(starship init zsh)"
 

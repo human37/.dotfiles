@@ -7,10 +7,10 @@ clipboard-paste-protection = false
 
 ## Background
 #background-opacity = 0.95
-background-blur-radius = 20 
+#background-blur-radius = 20
 
 ## Theme
-theme = dark:Framer,light:ayu_light
+theme = dark:Dark Pastel,light:ayu_light
 font-family =  MonaspiceNe NFM Medium
 font-size = 16
 font-thicken
@@ -27,11 +27,11 @@ quick-terminal-animation-duration = 0
 
 
 ## Icon
-macos-icon = custom-style
 macos-icon-frame = plastic
-macos-icon-ghost-color = blue
-macos-icon-screen-color = blue
+macos-icon = custom-style
+macos-icon-ghost-color = #BCBEC4
+macos-icon-screen-color = #CF9FFF
 
 
-# Startup
+## Startup
 command = /opt/homebrew/bin/tmux new -A -s dev
