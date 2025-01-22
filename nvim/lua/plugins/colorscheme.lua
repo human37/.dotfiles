@@ -22,7 +22,7 @@ return {
           sidebars = "transparent",
           floats = "transparent",
         },
-        on_highlights = function(hl, c)
+        on_highlights = function(hl)
           -- Additional highlight overrides if needed
           hl.Normal = { bg = "NONE" }
           hl.NormalFloat = { bg = "NONE" }
@@ -34,4 +34,4 @@ return {
       vim.cmd([[colorscheme tokyonight-night]])
     end,
   },
-} 
+}

@@ -4,6 +4,9 @@
 # add asdf to PATH
 export PATH="$HOME/.asdf/shims:$HOME/.asdf/bin:$PATH"
 
+# add scripts to PATH
+export PATH="$HOME/bin:$PATH"
+
 # add starship
 eval "$(starship init zsh)"
 

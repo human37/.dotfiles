@@ -45,10 +45,6 @@ key-mapping.preset = 'qwerty'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'Ghostty'
-run = 'move-node-to-workspace term'
-
-[[on-window-detected]]
 if.app-name-regex-substring = 'Arc'
 run = 'move-node-to-workspace browser'
 
