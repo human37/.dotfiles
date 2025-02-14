@@ -1,0 +1,54 @@
+  # yaml-language-server: $schema=https://dlvhdr.github.io/gh-dash/configuration/gh-dash/schema.json
+prSections:
+  - title: Mine
+    filters: is:open author:@me org:Zonos
+    layout:
+      author:
+        hidden: true
+  - title: Review
+    filters: org:Zonos -author:@me is:open review-requested:@me
+  - title: All
+    filters: org:Zonos
+
+pager:
+  diff: delta
+defaults:
+  view: prs
+  refetchIntervalMinutes: 1
+  layout:
+    prs:
+      repoName:
+        grow: true,
+        width: 10
+        hidden: false
+      base:
+        hidden: true
+
+  preview:
+    open: true
+    width: 70
+  prsLimit: 20
+  issuesLimit: 20
+
+repoPaths:
+  Zonos/*: ~/Zonos/*
+
+theme:
+  ui:
+    sectionsShowCount: true
+    table:
+      compact: false
+  colors:
+    text:
+      primary: "#E2E1ED"
+      secondary: "#666CA6"
+      inverted: "#242347"
+      faint: "#B0B3BF"
+      warning: "#E0AF68"
+      success: "#3DF294"
+    background:
+      selected: "#1B1B33"
+    border:
+      primary: "#383B5B"
+      secondary: "#39386B"
+      faint: "#2B2B40"

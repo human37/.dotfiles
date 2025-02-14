@@ -24,7 +24,6 @@ line-numbers = true
 #syntax-theme = Dracula
 features = decorations
 width = variable
-pager = "less -RF"
 plus-style = "syntax #012800"
 minus-style = "syntax #340001"
 true-color = always

@@ -1,8 +1,5 @@
 # add asdf
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
-
-# add asdf to PATH
-export PATH="$HOME/.asdf/shims:$HOME/.asdf/bin:$PATH"
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 # add scripts to PATH
 export PATH="$HOME/bin:$PATH"

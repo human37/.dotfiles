@@ -42,7 +42,7 @@ key-mapping.preset = 'qwerty'
 # Drop it from your config, if you don't like this behavior
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
-on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+# on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Arc'
@@ -77,7 +77,7 @@ if.app-name-regex-substring = 'Datagrip'
 run = 'move-node-to-workspace db'
 
 [[on-window-detected]]
-if.app-id="com.mitchellh.ghostty"
+if.app-name-regex-substring="ghostty"
 run = [
   'layout floating'
 ]

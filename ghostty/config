@@ -27,6 +27,7 @@ keybind = global:option+space=toggle_quick_terminal
 quick-terminal-screen = main
 quick-terminal-autohide = false
 quick-terminal-animation-duration = 0
+attach_to_active_space = false
 
 
 ## Icon
