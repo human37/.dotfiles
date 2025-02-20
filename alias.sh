@@ -23,9 +23,6 @@ alias ghd="gh dash --config ~/.dotfiles/.gh-dash.yml"
 alias l="ls"
 alias ll="ls -la"
 
-# uses bat instead of cat
-alias cat="bat"
-
 alias pip="pip3"
 
 # curl with jq
