@@ -60,3 +60,4 @@ function jwt() {
 
     echo -n "$token" | awk -F"." '{print $2}' | base64 -d | jq
 }
+

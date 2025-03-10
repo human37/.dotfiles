@@ -62,7 +62,7 @@ run = 'move-node-to-workspace slack'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Linear'
-run = 'move-node-to-workspace slack'
+run = 'move-node-to-workspace notes'
 
 [[on-window-detected]]
 if.app-name-regex-substring = 'Front'
@@ -75,12 +75,6 @@ run = 'move-node-to-workspace postman'
 [[on-window-detected]]
 if.app-name-regex-substring = 'Datagrip'
 run = 'move-node-to-workspace db'
-
-[[on-window-detected]]
-if.app-name-regex-substring="ghostty"
-run = [
-  'layout floating'
-]
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
