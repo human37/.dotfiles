@@ -1,8 +1,13 @@
 if vim.g.vscode then
   -- VSCode Neovim Config
-  
   vim.g.mapleader = " "  -- Sets leader key to <Space>
   vim.g.maplocalleader = " "  -- Also set local leader to <Space>
+
+  -- Use system clipboard for y and p
+  vim.opt.clipboard = "unnamedplus"  -- Use system clipboard
+  vim.keymap.set('n', 'p', 'p', { desc = "Paste after cursor" })
+  
+  -- Tab navigation
   vim.keymap.set('n', '<S-h>', '<Cmd>Tabprevious<CR>')
   vim.keymap.set('n', '<S-l>', '<Cmd>Tabnext<CR>')
 

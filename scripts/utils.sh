@@ -43,6 +43,30 @@ function rkeys() {
     done
 }
 
+function kafka_listen() {
+    local topic="$1"
+    
+    # Check if kcat is installed
+    if ! command -v kcat &>/dev/null; then
+        echo "Error: kcat could not be found. Please install it and try again."
+        return 1
+    fi
+    
+    # Format output with timestamps and pretty-print JSON if possible
+    kcat -u -b localhost:9092 -t "$topic" -C \
+        -f '\n- - - -\ntimestamp: %T partition: %p offset: %o\nvalue: %s\n- - - -\n' \
+        | stdbuf -oL tr -d '\r' | while IFS= read -r line; do
+            if [[ $line == "value:"* ]]; then
+                # Extract the JSON part after "value: "
+                json_part="${line#value: }"
+                echo -n "message: "
+                echo "$json_part" | jq --unbuffered '.'
+            else
+                echo "$line"
+            fi
+        done
+}
+
 function jwt() {
     local token="$1"
 
