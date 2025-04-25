@@ -1,5 +1,5 @@
 # clean postgres data
-function pg_clean() {
+function pgclean() {
   local localDir="${PWD}"
   cd /Users/ammon/zonos/DockerResources/postgres_cluster/
   docker compose down

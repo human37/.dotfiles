@@ -33,10 +33,33 @@ function fpr() {
     gh pr create --title "$1" --draft --base main --head "$cbranch"
 }
 
-# git diff with untracked files
+# git diff utility 
 function fgd() {
-    # Add untracked files first
     git add -N .
-    # Run git diff
+
+    if [ $# -eq 2 ]; then
+        if [[ "$1" == "dev" && "$2" == "prod" ]] || [[ "$1" == "prod" && "$2" == "dev" ]]; then
+            echo "diffing dev -> prod"
+            git tag -d dev prod > /dev/null 2>&1 || true
+            git fetch --tags --force > /dev/null 2>&1
+            git diff dev prod
+            return 0
+        fi
+    elif [ $# -eq 1 ]; then
+        if [ "$1" = "dev" ]; then
+            echo "diffing local branch -> dev"
+            git tag -d dev > /dev/null 2>&1 || true
+            git fetch --tags --force > /dev/null 2>&1
+            git diff dev
+            return 0
+        elif [ "$1" = "prod" ]; then
+            echo "diffing local branch -> prod"
+            git tag -d prod > /dev/null 2>&1 || true
+            git fetch --tags --force > /dev/null 2>&1
+            git diff prod
+            return 0
+        fi
+    fi
+
     git diff
 }
