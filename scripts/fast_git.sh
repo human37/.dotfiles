@@ -42,7 +42,7 @@ function fgd() {
             echo "diffing dev -> prod"
             git tag -d dev prod > /dev/null 2>&1 || true
             git fetch --tags --force > /dev/null 2>&1
-            git diff dev prod
+            git diff prod dev
             return 0
         fi
     elif [ $# -eq 1 ]; then

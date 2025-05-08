@@ -85,3 +85,7 @@ function jwt() {
     echo -n "$token" | awk -F"." '{print $2}' | base64 -d | jq
 }
 
+
+function td() {
+  nvim ~/.todo/todo.md
+}
