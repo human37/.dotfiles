@@ -23,6 +23,20 @@ function fmerge() {
     fi
 }
 
+# fast git checkout
+function fco() {
+    git checkout $@
+    git pull
+}
+
+# fast git checkout main
+function fmain() {
+    git stash
+    git stash clear
+    git checkout main
+    git pull
+}
+
 # create a draft PR for the current branch
 function fpr() {
     local cbranch=$(git branch --show-current)
