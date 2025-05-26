@@ -24,7 +24,7 @@ function reset_docker() {
   echo "docker storage cleaned."
   docker network create zonos
   echo "cleaning postgres data..."
-  fcdocker
+  pgclean
 }
 
 # fast docker compose up
