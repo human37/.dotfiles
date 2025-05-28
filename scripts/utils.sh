@@ -89,3 +89,22 @@ function jwt() {
 function td() {
   nvim ~/.todo/todo.md
 }
+
+
+function qtf() {
+  /usr/bin/osascript <<'APPLESCRIPT'
+  tell application "Ghostty" to activate
+
+  -- Give macOS a heartbeat
+  delay 0.05
+
+  -- Click “Window → Fill”
+  tell application "System Events"
+    tell application process "Ghostty"
+      if exists (menu item "Fill" of menu "Window" of menu bar 1) then
+        click menu item "Fill" of menu "Window" of menu bar 1
+      end if
+    end tell
+  end tell
+APPLESCRIPT
+}
