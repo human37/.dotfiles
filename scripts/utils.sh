@@ -108,3 +108,7 @@ function qtf() {
   end tell
 APPLESCRIPT
 }
+
+function gce() {
+  gh copilot explain "$@"
+}
