@@ -70,19 +70,22 @@ function kafka_listen() {
 function jwt() {
     local token="$1"
 
-    # Validate input
     if [ -z "$token" ]; then
         echo "Error: Please provide a JWT token"
         return 1
     fi
 
-    # Check if jq is installed
     if ! command -v jq &>/dev/null; then
         echo "Error: jq is not installed. Please install it to decode JSON."
         return 1
     fi
 
-    echo -n "$token" | awk -F"." '{print $2}' | base64 -d | jq
+    echo -n "$token" | awk -F"." '{print $2}' | tr '_-' '/+' | awk '{len=length($0); if(len%4==2) print $0"=="; else if(len%4==3) print $0"="; else print $0}' | base64 -d | jq '
+        # Convert common JWT timestamp fields to readable dates
+        if .exp then .exp_readable = (.exp | strftime("%Y-%m-%d %H:%M:%S UTC")) else . end |
+        if .iat then .iat_readable = (.iat | strftime("%Y-%m-%d %H:%M:%S UTC")) else . end |
+        if .nbf then .nbf_readable = (.nbf | strftime("%Y-%m-%d %H:%M:%S UTC")) else . end
+    '
 }
 
 
