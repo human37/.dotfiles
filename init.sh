@@ -13,6 +13,7 @@ mkdir -p ~/.config
 [ ! -e ~/.zshrc ] && [ -f ~/.dotfiles/.zshrc ] && ln -s ~/.dotfiles/.zshrc ~/
 [ ! -e ~/.vimrc ] && [ -f ~/.dotfiles/.vimrc ] && ln -s ~/.dotfiles/.vimrc ~/
 [ ! -e ~/.tmux.conf ] && [ -f ~/.dotfiles/.tmux.conf ] && ln -s ~/.dotfiles/.tmux.conf ~/
+[ ! -e ~/.config/ghostty ] && [ -d ~/.dotfiles/ghostty ] && ln -s ~/.dotfiles/ghostty ~/.config/ghostty
 
 # Config directory symlinks
 [ ! -e ~/.config/starship.toml ] && [ -f ~/.dotfiles/starship.toml ] && ln -s ~/.dotfiles/starship.toml ~/.config/

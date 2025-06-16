@@ -38,3 +38,5 @@ alias gd=fgd
 alias rl="source ~/.zshrc"
 
 alias vim="nvim"
+
+alias td="gtodo"

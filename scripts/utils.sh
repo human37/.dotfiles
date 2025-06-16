@@ -89,11 +89,6 @@ function jwt() {
 }
 
 
-function td() {
-  nvim ~/.todo/todo.md
-}
-
-
 function qtf() {
   /usr/bin/osascript <<'APPLESCRIPT'
   tell application "Ghostty" to activate
@@ -114,4 +109,16 @@ APPLESCRIPT
 
 function gce() {
   gh copilot explain "$@"
+}
+
+function tda() {
+  local name="$1"
+  local cat="$2"
+  gtodo add --task "$name" --cat "$cat"
+}
+
+function tdc() {
+  local id="$1"
+  local name="$2"
+  gtodo update --id --task "$name" 
 }

@@ -4,6 +4,10 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 # add scripts to PATH
 export PATH="$HOME/bin:$PATH"
 
+# add go to path
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
 # add starship
 eval "$(starship init zsh)"
 

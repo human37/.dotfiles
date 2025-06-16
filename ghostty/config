@@ -8,9 +8,6 @@ window-decoration = none
 clipboard-read = "allow"
 clipboard-paste-protection = false
 
-## Background
-background = #0a0a0d
-
 ## Theme
 theme = dark:citruszest,light:Alabaster
 font-family = MonaspiceNe NFM Medium
@@ -40,4 +37,4 @@ macos-icon-ghost-color = #BCBEC4
 macos-icon-screen-color = #CF9FFF
 
 ## Startup
-#command = /opt/homebrew/bin/tmux new -A -s dev
+##command = /opt/homebrew/bin/tmux new -A -s dev
