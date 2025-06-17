@@ -2,7 +2,7 @@
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 # add scripts to PATH
-export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/bin:$HOME/.dotfiles/scripts:$PATH"
 
 # add go to path
 export GOPATH=$HOME/go
@@ -21,7 +21,7 @@ source ~/.dotfiles/secrets.sh
 eval "$(fzf --zsh)"
 
 # source all scripts in the .dotfiles directory
-for script in ~/.dotfiles/scripts/*.sh; do
+for script in ~/.dotfiles/shell/*.sh; do
     source "$script"
 done
 

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+background_theme="dark"
+
+case $(uname) in
+Darwin)
+    color_theme=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
+    if [[ "${color_theme}" != 'Dark' ]]; then
+        background_theme="light"
+    fi
+    ;;
+*) ;;
+esac
+
+case "${background_theme}" in
+dark)
+    delta --dark "$@"
+    ;;
+light)
+    delta --light "$@"
+    ;;
+*)
+    echo "Invalid background_theme value. Please set it to either 'dark' or 'light'."
+    exit 1
+    ;;
+esac

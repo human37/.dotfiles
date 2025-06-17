@@ -19,8 +19,8 @@ cursor-color = #ffc0cb
 window-colorspace = "display-p3"
 
 # Shell Integration
-shell-integration = zsh
-shell-integration-features = cursor
+# shell-integration = zsh
+# shell-integration-features = cursor
 
 ## Quick Terminal 
 keybind = global:option+space=toggle_quick_terminal
