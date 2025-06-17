@@ -9,13 +9,13 @@ clipboard-read = "allow"
 clipboard-paste-protection = false
 
 ## Theme
-theme = dark:citruszest,light:Alabaster
+theme = dark:tokyonight,light:tokyonight-day
 font-family = MonaspiceNe NFM Medium
 font-size = 17
 font-thicken
 cursor-style = block
 cursor-style-blink = true
-cursor-color = #ffc0cb
+# cursor-color = #ffc0cb
 window-colorspace = "display-p3"
 
 # Shell Integration

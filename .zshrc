@@ -44,3 +44,6 @@ source ~/.dotfiles/alias.sh
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+# default environment variables
+export SYSTEM_THEME="dark"
