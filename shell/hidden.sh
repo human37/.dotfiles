@@ -712,36 +712,159 @@ function pgrestore() {
   echo "Database restore completed for $database"
 }
 
-function ups_update_image() {
-  # Check if the required arguments are provided
-  if [[ $# -lt 3 ]]; then
-    echo "Usage: ups_update_image <service_name> <environment> <image_tag>"
-    return 1
+function lz-pglocal() {
+  echo "connecting to local postgres with lazysql..."
+
+  local DB="${1:-postgres}"
+  local URL="postgres://zonos@localhost:5432/${DB}"
+
+  lazysql "$URL"
+}
+
+function lz-pglocal-ro() {
+  echo "connecting to local postgres reader with lazysql..."
+
+  local DB="${1:-postgres}"
+  local URL="postgres://zonos@localhost:5433/${DB}"
+
+  lazysql "$URL"
+}
+
+function lz-pgdev() {
+  echo "connecting to dev postgres with lazysq..."
+
+  export PGPASSWORD=$(security find-generic-password -l "PG_DEV_PASSWORD" -w)
+
+  local PORT=5433
+
+  if ! lsof -i TCP:$PORT | grep ssh >/dev/null; then
+    echo "Establishing SSH tunnel on port $PORT..."
+    ssh -f -N bastion-dev
+    echo "SSH tunnel established."
+  else
+    echo "SSH tunnel already running on port $PORT."
   fi
 
-  local service="$1"
-  local environment="$2"
-  local image_tag="$3"
-  
-  # Validate environment
-  if [[ ! "$environment" =~ ^(zonos|dev|uat|prod)$ ]]; then
-    echo "Error: Invalid environment. Must be one of: zonos, dev, uat, prod"
-    return 1
+  local DB="${1:-postgres}"
+
+  local URL="postgres://ammontaylor@localhost:${PORT}/${DB}?sslmode=require"
+
+  lazysql "$URL"  
+
+  unset PGPASSWORD
+}
+
+function lz-pgprod() {
+  echo "connecting to prod postgres with lazysql..."
+
+  export PGPASSWORD=$(security find-generic-password -l "PG_PROD_PASSWORD" -w)
+
+  local PORT=5434
+
+  if ! lsof -i TCP:$PORT | grep ssh >/dev/null; then
+    echo "Establishing SSH tunnel on port $PORT..."
+    ssh -f -N bastion-prod
+    echo "SSH tunnel established."
+  else
+    echo "SSH tunnel already running on port $PORT."
   fi
 
-  # Check if the tfvars file exists
-  local tfvars_file="services/${service}/env-${environment}.tfvars"
-  
-  if [[ ! -f "$tfvars_file" ]]; then
-    echo "Error: File not found: $tfvars_file"
-    return 1
+  local DB="${1:-postgres}"
+  local URL="postgres://ammontaylor@localhost:${PORT}/${DB}?sslmode=require"
+
+  lazysql "$URL"
+
+  unset PGPASSWORD
+}
+
+function lz-pgupszonos() {
+  echo "connecting to ups-zonos postgres with lazysql..."
+
+  export PGPASSWORD=$(security find-generic-password -l "PG_UPS_ZONOS_PASSWORD" -w)
+
+  local PORT=5435
+
+  if ! lsof -i TCP:$PORT | grep ssh >/dev/null; then
+    echo "Establishing SSH tunnel on port $PORT..."
+    ssh -f -N bastion-ups-zonos-ro
+    echo "SSH tunnel established."
+  else
+    echo "SSH tunnel already running on port $PORT."
   fi
-  
-  echo "Updating $tfvars_file with image tag: $image_tag"
-  
-  # Update the image tag in the tfvars file
-  # This replaces any "ups-..." tag with the provided tag
-  sed -i '' -E "s/ups-[a-z0-9]+\"/${image_tag}\"/g" "$tfvars_file"
-  
-  echo "Updated $tfvars_file successfully"
+
+  local DB="${1:-postgres}"
+  local URL="postgres://ammontaylor@localhost:${PORT}/${DB}?sslmode=require"
+
+  lazysql "$URL"
+
+  unset PGPASSWORD
+}
+
+function lz-pgupsdev() {
+  echo "connecting to ups-dev postgres with lazysql..."
+
+  export PGPASSWORD=$(security find-generic-password -l "PG_UPS_DEV_PASSWORD" -w)
+
+  local PORT=5436
+
+  if ! lsof -i TCP:$PORT | grep ssh >/dev/null; then
+    echo "Establishing SSH tunnel on port $PORT..."
+    ssh -f -N bastion-ups-dev-ro
+    echo "SSH tunnel established."
+  else
+    echo "SSH tunnel already running on port $PORT."
+  fi
+
+  local DB="${1:-postgres}"
+  local URL="postgres://ammontaylor@localhost:${PORT}/${DB}?sslmode=require"
+
+  lazysql "$URL"
+
+  unset PGPASSWORD
+}
+
+function lz-pgupsprod() {
+  echo "connecting to ups-prod postgres with lazysql..."
+
+  export PGPASSWORD=$(security find-generic-password -l "PG_UPS_PROD_PASSWORD" -w)
+
+  local PORT=5437
+
+  if ! lsof -i TCP:$PORT | grep ssh >/dev/null; then
+    echo "Establishing SSH tunnel on port $PORT..."
+    ssh -f -N bastion-ups-prod-ro
+    echo "SSH tunnel established."
+  else
+    echo "SSH tunnel already running on port $PORT."
+  fi
+
+  local DB="${1:-postgres}"
+  local URL="postgres://ammontaylor@localhost:${PORT}/${DB}?sslmode=require"
+
+  lazysql "$URL"
+
+  unset PGPASSWORD
+}
+
+function lz-pgupsuat() {
+  echo "connecting to ups-uat postgres with lazysql..."
+
+  export PGPASSWORD=$(security find-generic-password -l "PG_UPS_UAT_PASSWORD" -w)
+
+  local PORT=5438
+
+  if ! lsof -i TCP:$PORT | grep ssh >/dev/null; then
+    echo "Establishing SSH tunnel on port $PORT..."
+    ssh -f -N bastion-ups-uat-ro
+    echo "SSH tunnel established."
+  else
+    echo "SSH tunnel already running on port $PORT."
+  fi
+
+  local DB="${1:-postgres}"
+  local URL="postgres://ammontaylor@localhost:${PORT}/${DB}?sslmode=require"
+
+  lazysql "$URL"
+
+  unset PGPASSWORD
 }

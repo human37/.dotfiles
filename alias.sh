@@ -30,6 +30,8 @@ curlj() {
   curl "$@" | jq .
 }
 
+alias pgkill="pkill -f pgcli"
+
 alias code=cursor
 
 # git aliases

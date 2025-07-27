@@ -24,3 +24,7 @@ symbol = "t "
 
 [rust]
 symbol = "🦀 "
+
+[gcloud]
+disabled = true
+

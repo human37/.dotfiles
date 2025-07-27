@@ -47,3 +47,9 @@ complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 # default environment variables
 export SYSTEM_THEME="dark"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/ammon/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/ammon/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/ammon/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ammon/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
