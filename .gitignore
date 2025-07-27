@@ -1,3 +1,5 @@
 secrets.sh
 scripts/hidden.sh
 shell/hidden.sh
+shell/db_conn.sh
+shell/hidden_util.sh
