@@ -17,6 +17,8 @@ cursor-color = #ffc0cb
 cursor-style = block
 cursor-style-blink = true
 window-colorspace = "display-p3"
+background-opacity = 0.75
+background-blur-radius = 40
 
 # Shell Integration
 # shell-integration = zsh
