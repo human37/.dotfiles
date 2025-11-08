@@ -9,28 +9,32 @@ clipboard-read = "allow"
 clipboard-paste-protection = false
 
 ## Theme
-theme = dark:citruszest,light:tokyonight-day
+theme = dark:Monokai Remastered,light:Farmhouse light
 font-family = MonaspiceNe NFM Medium
-font-size = 17
-font-thicken
+font-size = 16
 cursor-color = #ffc0cb
 cursor-style = block
 cursor-style-blink = true
 window-colorspace = "display-p3"
-background-opacity = 0.75
-background-blur-radius = 40
+# background-opacity = 0.8
+# background-blur-radius = 80
 
 # Shell Integration
 # shell-integration = zsh
 # shell-integration-features = cursor
 
-## Quick Terminal 
+## Quick Terminal
 keybind = global:option+space=toggle_quick_terminal
 quick-terminal-screen = macos-menu-bar
 quick-terminal-autohide = false
 quick-terminal-animation-duration = 0
 quick-terminal-space-behavior = remain
-quick-terminal-position = bottom
+quick-terminal-position = left
+quick-terminal-size = 100%
+
+# Shaders
+# custom-shader-animation = always
+# custom-shader = /Users/ammon/.dotfiles/ghostty/shaders/starfield.glsl
 
 ## Icon
 macos-icon-frame = plastic
