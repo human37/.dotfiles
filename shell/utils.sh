@@ -29,7 +29,7 @@ function rkeys() {
     # Iterate over each port in the array
     for PORT in "${REDIS_CLUSTER_PORTS[@]}"; do
         # Get all node addresses (IP:Port) for the current port
-        echo $(redis-cli -c -p $PORT --scan)
+        KEYS=$(redis-cli -c -p $PORT --scan)
         # echo $KEYS
         if [ -n "$KEYS" ]; then
             echo "Keys on node $PORT:"
@@ -111,6 +111,24 @@ function gce() {
   gh copilot explain "$@"
 }
 
+function killport() {
+  if [ -z "$1" ]; then
+    echo "Usage: killport <port>"
+    return 1
+  fi
+
+  local pid
+  pid=$(lsof -ti :$1)
+
+  if [ -z "$pid" ]; then
+    echo "No process found on port $1"
+    return 0
+  fi
+
+  echo "Killing process $pid on port $1..."
+  kill -9 $pid
+}
+
 function tda() {
   local name="$1"
   local cat="$2"
@@ -120,5 +138,38 @@ function tda() {
 function tdc() {
   local id="$1"
   local name="$2"
-  gtodo update --id --task "$name" 
+  gtodo update --id "$id" --task "$name" 
+}
+
+function runwf() {
+  local workflows_dir="/Users/ammon/Zonos/workflows"
+  local args=("$@")
+
+  if [ ! -d "$workflows_dir" ]; then
+    echo "Error: workflows directory not found at $workflows_dir"
+    return 1
+  fi
+
+  local files=("$workflows_dir"/*-wf.py)
+  if [ ${#files[@]} -eq 0 ]; then
+    echo "Error: no workflow scripts found in $workflows_dir"
+    return 1
+  fi
+
+  local selection
+  if command -v fzf &>/dev/null; then
+    selection=$(printf "%s\n" "${files[@]##*/}" | fzf --prompt="workflow> ")
+  else
+    echo "Select a workflow:"
+    select selection in "${files[@]##*/}"; do
+      break
+    done
+  fi
+
+  if [ -z "$selection" ]; then
+    echo "No workflow selected."
+    return 1
+  fi
+
+  (cd "$workflows_dir" && "./$selection" "${args[@]}")
 }

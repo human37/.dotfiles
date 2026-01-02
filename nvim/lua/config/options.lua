@@ -3,3 +3,6 @@
 -- Add any additional options here
 
 vim.g.autoformat = false -- Disable global autoformat
+
+-- Disable ShaDa (session history) to prevent tmp file issues
+vim.o.shada = ""

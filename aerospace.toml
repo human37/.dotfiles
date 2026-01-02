@@ -88,6 +88,10 @@ run = 'layout floating'
 if.app-id = 'org.winehq.wine'
 run = 'layout floating'
 
+[[on-window-detected]]
+if.app-name-regex-substring = 'Ghostty'
+run = 'layout floating'
+
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
 # - Constant:     gaps.outer.top = 8

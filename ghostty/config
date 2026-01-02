@@ -2,7 +2,7 @@
 mouse-hide-while-typing = true
 window-padding-y = 4
 window-padding-x = 4
-window-decoration = none
+macos-non-native-fullscreen = false
 
 ## Clipboard
 clipboard-read = "allow"
@@ -10,7 +10,8 @@ clipboard-paste-protection = false
 
 ## Theme
 theme = dark:Monokai Remastered,light:Farmhouse light
-font-family = MonaspiceNe NFM Medium
+# font-family = MonaspiceNe NFM Medium
+font-family = GoMono Nerd Font
 font-size = 16
 cursor-color = #ffc0cb
 cursor-style = block
@@ -29,8 +30,8 @@ quick-terminal-screen = macos-menu-bar
 quick-terminal-autohide = false
 quick-terminal-animation-duration = 0
 quick-terminal-space-behavior = remain
-quick-terminal-position = left
-quick-terminal-size = 100%
+quick-terminal-position = center
+quick-terminal-size = 800px,800px
 
 # Shaders
 # custom-shader-animation = always
