@@ -9,12 +9,10 @@ rebase = false
 autoSetupRemote = true
 
 [core]
-pager = delta-adaptive
-	untrackedCache = true
-	fsmonitor = true
+pager = delta
 
 [interactive]
-diffFilter = delta-adaptive --color-only
+diffFilter = delta --color-only
 
 [delta]
 navigate = true

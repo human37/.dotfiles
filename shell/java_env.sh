@@ -1,5 +1,7 @@
 # set java home
-. ~/.asdf/plugins/java/set-java-home.zsh
+if [ -f ~/.asdf/plugins/java/set-java-home.zsh ]; then
+    . ~/.asdf/plugins/java/set-java-home.zsh
+fi
 
 # add java to path
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"

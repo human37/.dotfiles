@@ -9,16 +9,24 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
 # add starship
-eval "$(starship init zsh)"
+if command -v starship >/dev/null 2>&1; then
+    eval "$(starship init zsh)"
+fi
 
 # add zioxide
-eval "$(zoxide init zsh)"
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init zsh)"
+fi
 
 # load secrets into env
-source ~/.dotfiles/secrets.sh
+if [ -f ~/.dotfiles/secrets.sh ]; then
+    source ~/.dotfiles/secrets.sh
+fi
 
 # add fzf
-eval "$(fzf --zsh)"
+if command -v fzf >/dev/null 2>&1; then
+    eval "$(fzf --zsh)"
+fi
 
 # source all scripts in the .dotfiles directory
 for script in ~/.dotfiles/shell/*.sh; do
@@ -35,12 +43,20 @@ bindkey '^F' forward-char
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 autoload -Uz compinit && compinit
 
-# load antidote for plugins
-source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
-antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins.txt
+# load zsh plugins (prefer precompiled, fallback to antidote)
+if [ -f "${ZDOTDIR:-$HOME}/.zsh_plugins.zsh" ] && [ -d "$HOME/Library/Caches/antidote" ]; then
+    source "${ZDOTDIR:-$HOME}/.zsh_plugins.zsh"
+elif [ -f /opt/homebrew/opt/antidote/share/antidote/antidote.zsh ]; then
+    source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
+    if [ -f "${ZDOTDIR:-$HOME}/.zsh_plugins.txt" ]; then
+        antidote load "${ZDOTDIR:-$HOME}/.zsh_plugins.txt"
+    fi
+fi
 
 # load in aliases
-source ~/.dotfiles/alias.sh
+if [ -f ~/.dotfiles/alias.sh ]; then
+    source ~/.dotfiles/alias.sh
+fi
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
@@ -53,3 +69,6 @@ if [ -f '/Users/ammon/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/ammon/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ammon/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+# Added by Antigravity
+export PATH="/Users/ammontay/.antigravity/antigravity/bin:$PATH"

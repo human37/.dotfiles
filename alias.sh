@@ -7,11 +7,8 @@ alias lzd=lazydocker
 # open file in zed
 alias zed="open -a /Applications/Zed.app -n"
 
-# uses lsd instead of ls
-alias ls="lsd"
-
-# uses eza for tree structure
-alias la="eza -T -L 3"
+# uses eza instead of ls
+alias ls="eza --icons=always --git --group-directories-first"
 
 # use lg instead of lazygit
 alias lg=lazygit
