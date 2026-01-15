@@ -3,3 +3,4 @@ scripts/hidden.sh
 shell/hidden.sh
 shell/db_conn.sh
 shell/hidden_util.sh
+shell/zonos_local_dev.sh

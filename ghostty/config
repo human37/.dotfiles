@@ -10,8 +10,8 @@ clipboard-paste-protection = false
 
 ## Theme
 theme = dark:Monokai Remastered,light:Farmhouse light
-# font-family = MonaspiceNe NFM Medium
-font-family = GoMono Nerd Font
+font-family = MonaspiceNe NFM Medium
+# font-family = GoMono Nerd Font
 font-size = 16
 cursor-color = #ffc0cb
 cursor-style = block

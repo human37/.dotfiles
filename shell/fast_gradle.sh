@@ -2,27 +2,36 @@
 function grun() {
   # Start with an empty command string
   local command=""
+  local -a env_args=()
 
-  # Parse flags
+  # Parse flags (skip for test runs to avoid interfering with Gradle flags)
   local target_graph=""
   local filtered_args=()
-  for arg in "$@"; do
-    case "$arg" in
-      --local-graph)
-        # Assumption: local graph runs at 4000 as used earlier; change if you meant 400
-        target_graph="http://localhost:4000/graphql"
-        ;;
-      --dev-graph)
-        target_graph="https://internal-graph.dgs.dev.zdops.net/graphql"
-        ;;
-     --prod-graph)
-        target_graph="https://internal-graph.dgs.prod.zdops.net/graphql"
-        ;;
-      *)
-        filtered_args+=("$arg")
-        ;;
-    esac
-  done
+  local skip_flag_parse=false
+  if [[ "$1" == "test" ]]; then
+    skip_flag_parse=true
+  fi
+  if [[ "$skip_flag_parse" == false ]]; then
+    for arg in "$@"; do
+      case "$arg" in
+        --local-graph)
+          # Assumption: local graph runs at 4000 as used earlier; change if you meant 400
+          target_graph="http://localhost:4000/graphql"
+          ;;
+        --dev-graph)
+          target_graph="https://internal-graph.dgs.dev.zdops.net/graphql"
+          ;;
+       --prod-graph)
+          target_graph="https://internal-graph.dgs.prod.zdops.net/graphql"
+          ;;
+        *)
+          filtered_args+=("$arg")
+          ;;
+      esac
+    done
+  else
+    filtered_args=("$@")
+  fi
   # Replace positional params with filtered args
   set -- "${filtered_args[@]}"
 
@@ -58,16 +67,13 @@ function grun() {
       key="${key#"${key%%[![:space:]]*}"}"
       key="${key%"${key##*[![:space:]]}"}"
       if [[ -n "$key" ]]; then
-        command+=" $key='$value'"
+        env_args+=("$key=$value")
       fi
     done < "${PWD}/local.env"
   fi
 
-  # Append the actual command to be executed
-  command+=" SPRING_OUTPUT_ANSI_ENABLED=ALWAYS ./gradlew \"$@\""
-
-  # Use eval to execute the constructed command
-  eval "$command"
+  # Run with env vars without eval so Gradle flags pass through
+  env "${env_args[@]}" SPRING_OUTPUT_ANSI_ENABLED=ALWAYS ./gradlew "$@"
 }
 
 # Runs a gradle command while adding local.env vars in debug mode

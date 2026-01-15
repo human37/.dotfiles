@@ -72,3 +72,6 @@ if [ -f '/Users/ammon/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '
 
 # Added by Antigravity
 export PATH="/Users/ammontay/.antigravity/antigravity/bin:$PATH"
+
+# opencode
+export PATH=/Users/ammon/.opencode/bin:$PATH

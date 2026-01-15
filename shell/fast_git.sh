@@ -47,6 +47,37 @@ function fpr() {
     gh pr create --title "$1" --draft --base main --head "$cbranch"
 }
 
+function fbranches() {
+    local base_default=""
+    if git show-ref --verify --quiet refs/heads/main; then
+        base_default="main"
+    elif git show-ref --verify --quiet refs/heads/master; then
+        base_default="master"
+    fi
+
+    git for-each-ref refs/heads \
+  --sort=-committerdate \
+  --format='%(committeremail)	%(refname:short)	%(committerdate:format:%Y-%m-%d %H:%M:%S)	%(committername)	%(upstream:short)' \
+| while IFS=$'\t' read -r email branch date author upstream; do
+        if [ "$branch" = "main" ]; then
+            continue
+        fi
+        if [ "${email:l}" = "<ammonx9@gmail.com>" ]; then
+            printf "%s\t%s\t%s\n" "$branch" "$date" "$author"
+            continue
+        fi
+
+        base="${upstream:-$base_default}"
+        if [ -n "$base" ] && git rev-parse --verify --quiet "$base" >/dev/null; then
+            if [ "$(git rev-list --count "$branch" --not "$base")" -eq 0 ]; then
+                printf "%s\t%s\t%s\n" "$branch" "$date" "$author"
+            fi
+        fi
+    done \
+| column -t -s $'\t' \
+| bat --plain
+}
+
 # git diff utility 
 function fgd() {
     git add -N .
